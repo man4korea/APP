@@ -4,8 +4,8 @@
 2. OS(윈도우,리눅스,맥) 및 환경들(WSL,파워셀,명령프롬프트등)을 파악해서 그에 맞게 세팅할 것. 모르면 사용자에게 물어볼 것.
 3. mcp-installer을 이용해 필요한 MCP들을 설치할 것
    (user 스코프로 설치 및 적용할것)
-4. 특정 MCP 설치시, 바로 설치하지 말고, 공식 npm 패키지나 GitHub 저장소를 확인하여 현재 OS 및 환경에 맞는 공식 설치법부터 확인할 것
-5. 공식 문서 확인 후 설치 진행할 것
+4. 특정 MCP 설치시, 바로 설치하지 말고, WebSearch 도구로 해당 MCP의 공식 사이트 확인하고 현재 OS 및 환경 매치하여, 공식 설치법부터 확인할 것
+5. 공식 사이트 확인 후에는 context7 MCP 존재하는 경우, context7으로 다시 한번 확인할 것
 6. MCP 설치 후, task를 통해 디버그 모드로 서브 에이전트 구동한 후, /mcp 를 통해 실제 작동여부를 반드시 확인할 것 
 7. 설정 시, API KEY 환경 변수 설정이 필요한 경우, 가상의 API 키로 디폴트로 설치 및 설정 후, 올바른 API 키 정보를 입력해야 함을 사용자에게 알릴 것
 8. Mysql MCP와 같이 특정 서버가 구동중 상태여만 정상 작동한 것은 에러가 나도 재설치하지 말고, 정상 구동을 위한 조건을 사용자에게 알릴 것
@@ -146,6 +146,8 @@
 (설치 및 설정한 후는 항상 아래 내용으로 검증할 것)
 	claude mcp list 으로 설치 목록에 포함되는지 내용 확인한 후,
 	task를 통해 디버그 모드로 서브 에이전트 구동한 후 (claude --debug), 최대 2분 동안 관찰한 후, 그 동안의 디버그 메시지(에러 시 관련 내용이 출력됨)를 확인하고 /mcp 를 통해 실제 작동여부를 반드시 확인할 것
+
+ㅊㅇ 
 		
 ** MCP 서버 제거가 필요할 때 예시: **
 claude mcp remove youtube-mcp
@@ -167,13 +169,9 @@ C:\Users\man4k\OneDrive\문서\APP\
     └── settings.json (프로젝트별 설정)
 ```
 
-### 웹앱 개발에 유용한 MCP 서버 추천 목록
-1. **@modelcontextprotocol/server-filesystem** - 파일 시스템 관리
-2. **@modelcontextprotocol/server-sequential-thinking** - 단계별 사고 도움
-3. **mcp-server-text-editor** - 텍스트 편집 기능
-4. **youtube-data-mcp-server** - YouTube API 연동 (API키 필요)
-
 ### 현재 환경 정보
-- **운영체제**: Windows 네이티브
+- **운영체제**: Windows11 64비트
 - **개발 디렉토리**: C:\Users\man4k\OneDrive\문서\APP
+- **깃허브 폴더** : https://github.com/man4korea/APP
+- **SHRIMP 데이터 폴더** : C:\Users\man4k\OneDrive\문서\APP\html\SHRIMP
 - **집/회사 동기화**: OneDrive 자동 동기화 활용
