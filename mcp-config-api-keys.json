@@ -1,0 +1,61 @@
+{
+  "mcpServers": {
+    // API 키가 필요한 MCP 서버들
+    // 사용 전에 .env 파일에서 해당 API 키를 설정하세요
+    
+    "notion-api-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-notion"
+      ],
+      "env": {
+        "NOTION_API_KEY": "your_notion_api_key_here"
+      }
+    },
+    
+    "tavily-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-tavily"
+      ],
+      "env": {
+        "TAVILY_API_KEY": "your_tavily_api_key_here"
+      }
+    },
+    
+    "youtube-data-mcp-server": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-youtube"
+      ],
+      "env": {
+        "YOUTUBE_API_KEY": "your_youtube_api_key_here"
+      }
+    },
+    
+    "openai-gpt-image-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-openai"
+      ],
+      "env": {
+        "OPENAI_API_KEY": "your_openai_api_key_here"
+      }
+    },
+    
+    "mcp-server-firecrawl": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-firecrawl"
+      ],
+      "env": {
+        "FIRECRAWL_API_KEY": "your_firecrawl_api_key_here"
+      }
+    }
+  }
+}

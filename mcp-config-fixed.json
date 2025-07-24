@@ -1,0 +1,194 @@
+{
+  "mcpServers": {
+    // 웹 자동화 관련 - 정상
+    "playwright-stealth": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@pvinis/playwright-stealth-mcp-server"
+      ]
+    },
+    
+    // 터미널 실행 - 정상
+    "terminal": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@dillip285/mcp-terminal"
+      ]
+    },
+    
+    // Context7 MCP - 정상 (키 설정됨)
+    "context7-mcp": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@upstash/context7-mcp",
+        "--key",
+        "89871a9a-cf95-4de7-ae49-1d380312c282",
+        "--profile",
+        "evolutionary-termite-Omv5KV"
+      ]
+    },
+    
+    // Google Search - 구조 오류 수정 (mcpServers 안으로 이동)
+    "googleSearch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "g-search-mcp"
+      ]
+    },
+    
+    // 파일시스템 - 정상
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "C:\\APP\\html"
+      ]
+    },
+    
+    // 텍스트 에디터 - 정상
+    "text-editor": {
+      "command": "npx",
+      "args": [
+        "mcp-server-text-editor"
+      ]
+    },
+    
+    // 데스크톱 컨트롤러 - 정상 (키 설정됨)
+    "desktop-commander": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@wonderwhy-er/desktop-commander",
+        "--key",
+        "89871a9a-cf95-4de7-ae49-1d380312c282"
+      ]
+    },
+    
+    // GitHub - 정상 (키 설정됨)
+    "github": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@smithery-ai/github",
+        "--key",
+        "89871a9a-cf95-4de7-ae49-1d380312c282",
+        "--profile",
+        "evolutionary-termite-Omv5KV"
+      ]
+    },
+    
+    // 파일 편집 - 정상
+    "edit-file-lines": {
+      "command": "node",
+      "args": [
+        "C:\\mcp-edit-file-lines\\build\\index.js",
+        "C:\\APP\\html"
+      ],
+      "env": {
+        "MCP_EDIT_STATE_TTL": "300000"
+      }
+    },
+    
+    // Firebase - 정상
+    "firebase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "firebase-tools@latest",
+        "experimental:mcp"
+      ]
+    },
+    
+    // 작업 관리자 - 정상
+    "shrimp-task-manager": {
+      "command": "node",
+      "args": [
+        "C:\\mcp-shrimp-task-manager\\dist\\index.js"
+      ],
+      "env": {
+        "DATA_DIR": "C:\\APP\\html\\SHRIMP",
+        "TEMPLATES_USE": "templates_en",
+        "ENABLE_GUI": "true"
+      }
+    },
+    
+    // Playwright + Python - 정상 (키 설정됨)
+    "playwright-plus-python-mcp": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@williamvd4/playwright-plus-python-mcp",
+        "--key",
+        "89871a9a-cf95-4de7-ae49-1d380312c282"
+      ]
+    },
+    
+    // Git - 정상
+    "git": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-git",
+        "--repository",
+        "C:\\APP\\html"
+      ]
+    },
+    
+    // 도구상자 - 정상
+    "toolbox": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-toolbox"
+      ]
+    },
+    
+    // 순차적 사고 - 정상
+    "server-sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-sequential-thinking"
+      ]
+    },
+    
+    // 메모리 - 정상
+    "mem0-memory-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-memory"
+      ]
+    },
+    
+    // Playwright 테스트 - 정상
+    "playwright-test": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-playwright"
+      ]
+    }
+  }
+}
