@@ -130,7 +130,7 @@
         "@anthropic-ai/mcp-server-notion"
       ],
       "env": {
-        "NOTION_API_KEY": "YOUR_NOTION_API_KEY_HERE"
+        "NOTION_API_KEY": "${NOTION_API_KEY}"
       }
     },
     "youtube-data-mcp-server": {
@@ -140,7 +140,7 @@
         "@anthropic-ai/mcp-server-youtube"
       ],
       "env": {
-        "YOUTUBE_API_KEY": "YOUR_YOUTUBE_API_KEY_HERE"
+        "YOUTUBE_API_KEY": "${YOUTUBE_API_KEY}"
       }
     },
     "openai-gpt-image-mcp": {
@@ -150,7 +150,7 @@
         "@anthropic-ai/mcp-server-openai"
       ],
       "env": {
-        "OPENAI_API_KEY": "YOUR_OPENAI_API_KEY_HERE"
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}"
       }
     }
   }
