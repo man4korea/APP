@@ -46,3 +46,16 @@ lerna-debug.log*
 
 # SHRIMP
 /SHRIMP/
+
+logs
+*.log
+dev-debug.log
+# Dependency directories
+node_modules/
+# Editor directories and files
+.vscode
+# OS specific
+
+# Task files
+# tasks.json
+# tasks/ 

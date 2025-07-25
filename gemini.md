@@ -1,4 +1,4 @@
-작업계획을 ## Gemini CLI를 위한 사용자 정의 도구 및 환경 설정 가이드
+## Gemini CLI를 위한 사용자 정의 도구 및 환경 설정 가이드
 
 ### 공통 주의사항
 1.  **현재 환경 파악**: OS(윈도우, 리눅스, 맥) 및 셸(WSL, PowerShell, 명령 프롬프트 등)에 맞는 명령어를 사용해야 합니다. 모를 경우 사용자에게 질문하세요.
@@ -79,6 +79,28 @@ DATA_DIR=C:\Users\man4k\OneDrive\문서\APP\SHRIMP
 TEMPLATES_USE=templates_en
 ENABLE_GUI=true
 
+#### 다중 프로젝트 환경에서 Shrimp Task 관리
+`C:\Users\man4k\OneDrive\문서\APP` 폴더 아래에 여러 sub 폴더(예: `프로젝트1`, `프로젝트2`)를 만들어 작업할 경우, 각 프로젝트별로 독립적인 Shrimp tasks를 관리할 수 있습니다.
+
+이를 위해서는 각 프로젝트 폴더 내에 `SHRIMP` 디렉토리를 생성하고, 해당 프로젝트 작업 시 `DATA_DIR` 환경 변수를 해당 `SHRIMP` 디렉토리로 설정해야 합니다.
+
+**예시:**
+- `C:\Users\man4k\OneDrive\문서\APP\프로젝트1\SHRIMP`
+- `C:\Users\man4k\OneDrive\문서\APP\프로젝트2\SHRIMP`
+
+**설정 방법:**
+각 프로젝트 작업 시, `runner.js`를 실행하기 전에 셸에서 `DATA_DIR` 환경 변수를 해당 프로젝트의 `SHRIMP` 디렉토리로 설정합니다.
+
+```powershell
+# 프로젝트1 작업 시 (PowerShell 예시)
+$env:DATA_DIR="C:\Users\man4k\OneDrive\문서\APP\프로젝트1\SHRIMP"
+node runner.js shrimp-task-manager list_tasks
+
+# 프로젝트2 작업 시 (PowerShell 예시)
+$env:DATA_DIR="C:\Users\man4k\OneDrive\문서\APP\프로젝트2\SHRIMP"
+node runner.js shrimp-task-manager list_tasks
+```
+
 ---
 
 ### MCP (Meta-Tool Controller Protocol) 사용법
@@ -121,7 +143,7 @@ node runner.js <mcp-alias> <command> [options]
 
 3.  **`upstash-context`**: Upstash 데이터베이스를 사용하여 대화의 컨텍스트를 관리합니다.
     ```bash
-    # 예시: 'main-context' 키로 저장된 컨텍스트 조회
+    # 예시: 'main-context' 키로 저장된fi컨텍스트 조회
     node runner.js upstash-context get-context --key "main-context"
     ```
 
