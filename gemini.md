@@ -152,3 +152,56 @@ node runner.js <mcp-alias> <command> [options]
     # 예시: 특정 메모리 조회
     node runner.js mem0-memory get-memory --key "user-preferences"
     ```
+
+
+---
+
+### MCP (Meta-Tool Controller Protocol) 사용법
+
+`.gemini/settings.json`에 등록된 MCP(Meta-Tool Controller Protocol) 서버는 `runner.js` 스크립트를 통해 사용할 수 있습니다. 이 스크립트는 각 MCP에 필요한 인증 헤더(API 키 등)를 자동으로 포함하여 요청을 보냅니다.
+
+#### 기본 사용법
+```bash
+node runner.js <mcp-alias> <command> [options]
+```
+- `<mcp-alias>`: `settings.json`에 정의된 MCP의 별칭 (예: `github`, `shrimp-task-manager`)
+- `<command>`: 해당 MCP가 지원하는 명령어
+- `[options]`: 명령어에 필요한 추가 인자
+
+#### 등록된 MCP 목록 및 예시
+
+1.  **`github`**: GitHub 관련 작업을 수행합니다. (예: 이슈 조회, 레포지토리 정보 확인)
+    ```bash
+    # 예시: man4korea/APP 레포지터리의 1번 이슈 내용 조회
+    node runner.js github get-issue --owner man4korea --repo APP --issue-number 1
+    ```
+
+2.  **`shrimp-task-manager`**: Shrimp Task Manager와 상호작용하여 작업을 관리합니다.
+
+    **지원 명령어:**
+    - `plan_task`: 복잡한 기능이나 작업에 대한 계획 수립이 필요할 때 사용합니다. 단계별 지침을 엄격히 따라야 합니다.
+    - `analyze_task`: 작업 요구사항을 분석하고 코드베이스를 검토하여 기술적 타당성과 잠재적 위험을 평가합니다.
+    - `reflect_task`: 분석 결과를 비판적으로 검토하고 솔루션의 완성도를 평가하며 최적화 기회를 식별합니다.
+    - `split_tasks`: 복잡한 작업을 독립적인 하위 작업으로 분해하고 종속성과 우선순위를 설정합니다.
+    - `list_tasks`: 완료 상태, 우선순위, 종속성을 포함한 구조화된 작업 목록을 생성합니다.
+
+    **사용 예시:**
+    ```bash
+    # 예시: 모든 작업 목록 조회
+    node runner.js shrimp-task-manager list_tasks
+
+    # 예시: 새로운 작업 계획 수립
+    node runner.js shrimp-task-manager plan_task --goal "사용자 인증 시스템 구현"
+    ```
+
+3.  **`upstash-context`**: Upstash 데이터베이스를 사용하여 대화의 컨텍스트를 관리합니다.
+    ```bash
+    # 예시: 'main-context' 키로 저장된fi컨텍스트 조회
+    node runner.js upstash-context get-context --key "main-context"
+    ```
+
+4.  **`mem0-memory`**: Mem0 AI를 사용하여 장기 기억을 관리합니다.
+    ```bash
+    # 예시: 특정 메모리 조회
+    node runner.js mem0-memory get-memory --key "user-preferences"
+    ```

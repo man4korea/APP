@@ -1,5 +1,1 @@
-docs: Gemini 및 Shrimp 설정 업데이트
-
-- gemini.md: MCP 사용법 및 Shrimp Task Manager 도구 설명 추가
-- .gitignore: .gemini, SHRIMP, logs 디렉토리 제외 처리
-- SHRIMP/tasks.json: 계산기 개발 계획 추가
+feat: Configure Gemini MCP environment and add bpr project
