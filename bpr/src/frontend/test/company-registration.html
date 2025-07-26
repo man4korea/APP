@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPR Hub - 회사 등록</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; }
+        
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .header { background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-section { background: white; padding: 30px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        h1 { color: #2563eb; margin-bottom: 10px; }
+        h2 { color: #374151; margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #374151; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 5px; font-size: 14px; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #2563eb; }
+        
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        
+        .btn { padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; text-decoration: none; display: inline-block; text-align: center; }
+        .btn-primary { background-color: #2563eb; color: white; }
+        .btn-primary:hover { background-color: #1d4ed8; }
+        .btn-secondary { background-color: #6b7280; color: white; }
+        
+        .checkbox-group { display: flex; align-items: center; gap: 10px; }
+        .checkbox-group input[type="checkbox"] { width: auto; }
+        
+        .info-box { background-color: #eff6ff; border-left: 4px solid #2563eb; padding: 15px; margin-bottom: 20px; }
+        .warning-box { background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏢 BPR Hub - 회사 등록</h1>
+            <p>비즈니스 프로세스 관리 시스템에 회사를 등록하세요</p>
+        </div>
+
+        <form id="companyRegistrationForm">
+            <!-- 회사 기본 정보 -->
+            <div class="form-section">
+                <h2>회사 기본 정보</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="companyName">회사명 *</label>
+                        <input type="text" id="companyName" name="companyName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taxNumber">사업자등록번호 *</label>
+                        <input type="text" id="taxNumber" name="taxNumber" placeholder="123-45-67890" pattern="[0-9]{3}-[0-9]{2}-[0-9]{5}" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="businessType">업종</label>
+                        <select id="businessType" name="businessType">
+                            <option value="">업종 선택</option>
+                            <option value="manufacturing">제조업</option>
+                            <option value="retail">소매업</option>
+                            <option value="services">서비스업</option>
+                            <option value="technology">IT/기술</option>
+                            <option value="finance">금융업</option>
+                            <option value="construction">건설업</option>
+                            <option value="others">기타</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="establishmentDate">법인설립일자</label>
+                        <input type="date" id="establishmentDate" name="establishmentDate">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 대표자 정보 -->
+            <div class="form-section">
+                <h2>대표자 정보</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="representativeName">대표자명 *</label>
+                        <input type="text" id="representativeName" name="representativeName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="representativePhone">대표 전화번호</label>
+                        <input type="tel" id="representativePhone" name="representativePhone" placeholder="02-1234-5678">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 관리자 정보 -->
+            <div class="form-section">
+                <h2>관리자 연락처</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="adminEmail">관리자 이메일 *</label>
+                        <input type="email" id="adminEmail" name="adminEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPhone">관리자 전화번호</label>
+                        <input type="tel" id="adminPhone" name="adminPhone" placeholder="010-1234-5678">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 주소 정보 -->
+            <div class="form-section">
+                <h2>주소 정보</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="postalCode">우편번호</label>
+                        <input type="text" id="postalCode" name="postalCode" placeholder="12345">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">회사 전화번호</label>
+                        <input type="tel" id="phone" name="phone" placeholder="02-1234-5678">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">주소</label>
+                    <textarea id="address" name="address" rows="3" placeholder="회사 주소를 입력하세요"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">회사 이메일</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="website">웹사이트</label>
+                        <input type="url" id="website" name="website" placeholder="https://company.com">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 설립자 계정 정보 -->
+            <div class="form-section">
+                <h2>설립자 계정 정보</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="founderEmail">설립자 이메일 *</label>
+                        <input type="email" id="founderEmail" name="founderEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="founderUsername">사용자명 *</label>
+                        <input type="text" id="founderUsername" name="founderUsername" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="founderFirstName">이름 *</label>
+                        <input type="text" id="founderFirstName" name="founderFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="founderLastName">성 *</label>
+                        <input type="text" id="founderLastName" name="founderLastName" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="founderPassword">비밀번호 *</label>
+                        <input type="password" id="founderPassword" name="founderPassword" minlength="8" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="founderPhone">연락처</label>
+                        <input type="tel" id="founderPhone" name="founderPhone" placeholder="010-1234-5678">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="founderDepartment">부서</label>
+                        <input type="text" id="founderDepartment" name="founderDepartment" value="경영진">
+                    </div>
+                    <div class="form-group">
+                        <label for="founderJobTitle">직책</label>
+                        <input type="text" id="founderJobTitle" name="founderJobTitle" value="대표이사">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 추가 옵션 -->
+            <div class="form-section">
+                <h2>추가 옵션</h2>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="createDefaultDepartments" name="createDefaultDepartments" checked>
+                    <label for="createDefaultDepartments">기본 부서 구조 생성 (경영진, 인사팀, 재무팀, 영업팀, 운영팀)</label>
+                </div>
+            </div>
+
+            <!-- 제출 버튼 -->
+            <div class="form-section">
+                <div class="info-box">
+                    <strong>참고:</strong> 회사 등록 후 구성원을 초대하고 비즈니스 프로세스를 관리할 수 있습니다.
+                </div>
+                
+                <div style="text-align: center;">
+                    <button type="submit" class="btn btn-primary">회사 등록</button>
+                    <a href="index.html" class="btn btn-secondary" style="margin-left: 10px;">취소</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('companyRegistrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // 회사 데이터와 설립자 데이터 분리
+            const companyData = {
+                companyName: data.companyName,
+                taxNumber: data.taxNumber,
+                businessType: data.businessType,
+                representativeName: data.representativeName,
+                representativePhone: data.representativePhone,
+                adminEmail: data.adminEmail,
+                adminPhone: data.adminPhone,
+                address: data.address,
+                postalCode: data.postalCode,
+                establishmentDate: data.establishmentDate,
+                phone: data.phone,
+                email: data.email,
+                website: data.website
+            };
+            
+            const founderData = {
+                email: data.founderEmail,
+                username: data.founderUsername,
+                password: data.founderPassword,
+                firstName: data.founderFirstName,
+                lastName: data.founderLastName,
+                phone: data.founderPhone,
+                department: data.founderDepartment,
+                jobTitle: data.founderJobTitle,
+                createDefaultDepartments: data.createDefaultDepartments === 'on'
+            };
+            
+            try {
+                // 실제 API 호출
+                const response = await fetch('/api/companies/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ companyData, founderData })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('회사 등록이 완료되었습니다!');
+                    // 성공 페이지로 이동 또는 대시보드로 이동
+                    window.location.href = 'company-dashboard.html';
+                } else {
+                    alert('등록 실패: ' + result.message);
+                }
+            } catch (error) {
+                console.error('등록 오류:', error);
+                alert('등록 중 오류가 발생했습니다. 다시 시도해주세요.');
+            }
+        });
+
+        // 사업자등록번호 자동 포맷팅
+        document.getElementById('taxNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (value.length >= 3) {
+                value = value.slice(0, 3) + '-' + value.slice(3);
+            }
+            if (value.length >= 6) {
+                value = value.slice(0, 6) + '-' + value.slice(6, 11);
+            }
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>

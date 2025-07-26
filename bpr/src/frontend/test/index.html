@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPR Hub - 테스트 환경</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        
+        .header { 
+            text-align: center; 
+            color: white; 
+            margin-bottom: 40px; 
+        }
+        
+        .header h1 { 
+            font-size: 3em; 
+            margin-bottom: 10px; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p { 
+            font-size: 1.2em; 
+            opacity: 0.9; 
+        }
+        
+        .cards-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+            margin-bottom: 40px;
+        }
+        
+        .card { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .card-icon { 
+            font-size: 3em; 
+            margin-bottom: 15px; 
+        }
+        
+        .card h3 { 
+            color: #2563eb; 
+            margin-bottom: 15px; 
+            font-size: 1.3em;
+        }
+        
+        .card p { 
+            color: #6b7280; 
+            margin-bottom: 20px; 
+            line-height: 1.6;
+        }
+        
+        .btn { 
+            display: inline-block;
+            padding: 12px 24px; 
+            background-color: #2563eb; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 8px; 
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover { 
+            background-color: #1d4ed8; 
+        }
+        
+        .btn-secondary {
+            background-color: #6b7280;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+        
+        .btn-success {
+            background-color: #059669;
+        }
+        
+        .btn-success:hover {
+            background-color: #047857;
+        }
+        
+        .features { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+            margin-bottom: 20px;
+        }
+        
+        .features h2 { 
+            color: #2563eb; 
+            margin-bottom: 30px; 
+            text-align: center;
+            font-size: 2em;
+        }
+        
+        .features-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 20px; 
+        }
+        
+        .feature-item { 
+            padding: 20px; 
+            background-color: #f9fafb; 
+            border-radius: 10px; 
+            border-left: 4px solid #2563eb;
+        }
+        
+        .feature-item h4 { 
+            color: #374151; 
+            margin-bottom: 10px; 
+        }
+        
+        .feature-item p { 
+            color: #6b7280; 
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-left: 8px;
+        }
+        
+        .status-complete {
+            background-color: #d1fae5;
+            color: #059669;
+        }
+        
+        .status-progress {
+            background-color: #fef3c7;
+            color: #f59e0b;
+        }
+        
+        .status-pending {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏢 BPR Hub</h1>
+            <p>Business Process Reengineering Management System</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">테스트 환경 - 멀티테넌트 기업용 BPM 시스템</p>
+        </div>
+
+        <div class="cards-grid">
+            <!-- 회사 등록 -->
+            <div class="card">
+                <div class="card-icon">🏭</div>
+                <h3>회사 등록</h3>
+                <p>새로운 회사를 등록하고 BPR 시스템을 시작하세요. 본점과 지점 구조를 지원합니다.</p>
+                <a href="company-registration.html" class="btn">회사 등록하기</a>
+            </div>
+
+            <!-- 대시보드 -->
+            <div class="card">
+                <div class="card-icon">📊</div>
+                <h3>회사 대시보드</h3>
+                <p>구성원 관리, 지점 관리, 프로세스 관리 등 전체 회사 운영을 관리하세요.</p>
+                <a href="company-dashboard.html" class="btn btn-success">대시보드 이동</a>
+            </div>
+
+            <!-- 지점 통합 -->
+            <div class="card">
+                <div class="card-icon">🔗</div>
+                <h3>지점 통합 승인</h3>
+                <p>본점에서 요청한 지점 통합을 검토하고 승인하거나 거부할 수 있습니다.</p>
+                <a href="branch-integration.html" class="btn btn-secondary">통합 승인</a>
+            </div>
+        </div>
+
+        <!-- 시스템 기능 소개 -->
+        <div class="features">
+            <h2>🚀 구현된 기능</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h4>멀티테넌트 아키텍처 <span class="status-indicator status-complete">완료</span></h4>
+                    <p>회사별 완전한 데이터 분리와 독립적인 관리 환경을 제공합니다.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <h4>권한 관리 시스템 <span class="status-indicator status-complete">완료</span></h4>
+                    <p>설립자, 관리자, 프로세스 오너, 일반 구성원의 4단계 권한 체계를 구현했습니다.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <h4>본점-지점 구조 <span class="status-indicator status-complete">완료</span></h4>
+                    <p>본점에서 지점을 관리하고, 지점 통합 승인 시스템을 지원합니다.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <h4>지점 통합 승인 <span class="status-indicator status-complete">완료</span></h4>
+                    <p>지점 등록자의 동의를 받아 안전하게 본점-지점 구조로 통합할 수 있습니다.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <h4>구성원 관리 <span class="status-indicator status-progress">진행중</span></h4>
+                    <p>구성원 초대, 역할 변경, 부서 배정 등의 기능을 개발 중입니다.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <h4>프로세스 관리 <span class="status-indicator status-pending">예정</span></h4>
+                    <p>비즈니스 프로세스 생성, 수정, 관리 기능을 구현할 예정입니다.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <h4>업무 검색 시스템 <span class="status-indicator status-pending">예정</span></h4>
+                    <p>키워드로 업무를 검색하고 담당자와 절차를 파악할 수 있는 기능입니다.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <h4>AI 지원 기능 <span class="status-indicator status-pending">예정</span></h4>
+                    <p>AI를 활용한 프로세스 최적화 및 업무 자동화 기능을 추가할 예정입니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 테스트 시나리오 -->
+        <div class="features">
+            <h2>🧪 테스트 시나리오</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h4>1. 회사 등록 테스트</h4>
+                    <p>새 회사를 등록하고 설립자 계정을 생성하는 전체 플로우를 테스트하세요.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <h4>2. 지점 등록 테스트</h4>
+                    <p>본점에서 지점을 등록하고 지점 관리자를 지정하는 기능을 테스트하세요.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <h4>3. 지점 통합 테스트</h4>
+                    <p>독립 회사가 본점의 지점으로 통합되는 승인 프로세스를 테스트하세요.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <h4>4. 권한 관리 테스트</h4>
+                    <p>다양한 역할의 사용자가 적절한 권한으로 시스템에 접근하는지 확인하세요.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 BPR Hub - Business Process Reengineering Management System</p>
+            <p style="font-size: 0.8em; margin-top: 5px;">개발 환경 | 테스트 전용</p>
+        </div>
+    </div>
+
+    <script>
+        // 페이지 로드 애니메이션
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            const features = document.querySelectorAll('.feature-item');
+            
+            // 카드 애니메이션
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 200);
+            });
+            
+            // 기능 설명 애니메이션
+            setTimeout(() => {
+                features.forEach((feature, index) => {
+                    setTimeout(() => {
+                        feature.style.opacity = '0';
+                        feature.style.transform = 'translateX(-20px)';
+                        feature.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                        
+                        setTimeout(() => {
+                            feature.style.opacity = '1';
+                            feature.style.transform = 'translateX(0)';
+                        }, 50);
+                    }, index * 100);
+                });
+            }, 1000);
+        });
+
+        // 시스템 상태 체크 (실제 API 연동 시 사용)
+        async function checkSystemStatus() {
+            try {
+                const response = await fetch('/api/system/health');
+                const result = await response.json();
+                
+                if (result.status === 'healthy') {
+                    console.log('✅ 시스템 정상 작동 중');
+                } else {
+                    console.warn('⚠️ 시스템 상태 확인 필요');
+                }
+            } catch (error) {
+                console.error('❌ 시스템 연결 불가:', error);
+            }
+        }
+
+        // 개발 모드에서만 실행
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            console.log('🔧 BPR Hub 개발 환경');
+            console.log('📁 테스트 페이지들:');
+            console.log('  - company-registration.html : 회사 등록');
+            console.log('  - company-dashboard.html : 회사 대시보드');
+            console.log('  - branch-integration.html : 지점 통합 승인');
+            
+            // 시스템 상태 체크 (선택사항)
+            // checkSystemStatus();
+        }
+    </script>
+</body>
+</html>
