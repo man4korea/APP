@@ -1,0 +1,231 @@
+[
+  {
+    "id": "BPR_HOMEPAGE",
+    "task": "BPR 서비스 홈페이지 개발",
+    "description": "BPR 프로젝트 소개 및 서비스 안내를 위한 랜딩 페이지 제작",
+    "status": "pending",
+    "priority": "high",
+    "type": "frontend",
+    "estimated_hours": 8,
+    "requirements": [
+      "서비스 소개 섹션",
+      "핵심 기능 설명",
+      "요금제 안내 (무료/프리미엄)",
+      "AI 기능 하이라이트",
+      "회원가입/로그인 링크"
+    ],
+    "deliverables": [
+      "index.html - 메인 홈페이지",
+      "css/bpr-home.css - 홈페이지 스타일",
+      "js/bpr-home.js - 홈페이지 인터랙션"
+    ],
+    "created_at": "2025-01-26",
+    "updated_at": "2025-01-26"
+  },
+  {
+    "id": "BPR_AUTH",
+    "task": "간단한 인증 시스템 구축",
+    "description": "MySQL 기반 회원가입/로그인 시스템 (Firebase 대신 직접 구현)",
+    "status": "pending",
+    "priority": "high",
+    "type": "backend",
+    "estimated_hours": 12,
+    "requirements": [
+      "사용자 회원가입 (이메일, 비밀번호)",
+      "로그인/로그아웃 기능",
+      "세션 관리",
+      "비밀번호 암호화 (bcrypt)"
+    ],
+    "deliverables": [
+      "auth/register.php - 회원가입 처리",
+      "auth/login.php - 로그인 처리",
+      "auth/logout.php - 로그아웃 처리",
+      "includes/db.php - DB 연결",
+      "includes/auth.php - 인증 헬퍼 함수"
+    ],
+    "created_at": "2025-01-26",
+    "updated_at": "2025-01-26"
+  },
+  {
+    "id": "BPR_DATABASE",
+    "task": "BPR Pilot 데이터베이스 설계",
+    "description": "필수 기능만으로 축소된 데이터베이스 스키마 설계 및 구축",
+    "status": "pending",
+    "priority": "high",
+    "type": "database",
+    "estimated_hours": 6,
+    "requirements": [
+      "users 테이블 (기본 사용자 정보)",
+      "organizations 테이블 (조직 정보)",
+      "process_maps 테이블 (프로세스 맵 기본 정보)",
+      "tasks 테이블 (작업 목록)",
+      "user_subscriptions 테이블 (무료/프리미엄 구분)"
+    ],
+    "deliverables": [
+      "sql/create_tables.sql - 테이블 생성 스크립트",
+      "sql/insert_sample_data.sql - 샘플 데이터",
+      "docs/database_schema.md - DB 스키마 문서"
+    ],
+    "created_at": "2025-01-26",
+    "updated_at": "2025-01-26"
+  },
+  {
+    "id": "BPR_DASHBOARD",
+    "task": "BPR 대시보드 기본 UI",
+    "description": "로그인 후 접근할 수 있는 기본 대시보드 화면",
+    "status": "pending",
+    "priority": "medium",
+    "type": "frontend",
+    "estimated_hours": 10,
+    "requirements": [
+      "사용자 프로필 표시",
+      "구독 상태 표시 (무료/프리미엄)",
+      "프로세스 맵 목록 (최대 5개 제한)",
+      "조직 정보 요약",
+      "AI 기능 사용량 표시"
+    ],
+    "deliverables": [
+      "dashboard.html - 대시보드 페이지",
+      "css/dashboard.css - 대시보드 스타일",
+      "js/dashboard.js - 대시보드 로직"
+    ],
+    "created_at": "2025-01-26",
+    "updated_at": "2025-01-26"
+  },
+  {
+    "id": "BPR_ORG_MGMT",
+    "task": "조직 관리 기본 기능",
+    "description": "조직 생성, 구성원 추가/삭제 등 기본적인 조직 관리 기능",
+    "status": "pending",
+    "priority": "medium",
+    "type": "fullstack",
+    "estimated_hours": 15,
+    "requirements": [
+      "조직 생성/수정/삭제",
+      "구성원 추가/삭제",
+      "간단한 계층 구조 (2-3 레벨만)",
+      "구성원 목록 보기"
+    ],
+    "deliverables": [
+      "organization.html - 조직 관리 페이지",
+      "api/organization.php - 조직 관리 API",
+      "css/organization.css - 조직 관리 스타일",
+      "js/organization.js - 조직 관리 로직"
+    ],
+    "created_at": "2025-01-26",
+    "updated_at": "2025-01-26"
+  },
+  {
+    "id": "BPR_TASK_MGMT",
+    "task": "작업(Task) 관리 기본 기능",
+    "description": "작업 등록, 수정, 삭제 및 시간 관리 기본 기능",
+    "status": "pending",
+    "priority": "medium",
+    "type": "fullstack",
+    "estimated_hours": 12,
+    "requirements": [
+      "작업 생성/수정/삭제",
+      "작업 유형 (DB/CM/DM) 구분",
+      "작업 시간 (PT, LT) 입력",
+      "구성원별 작업 할당"
+    ],
+    "deliverables": [
+      "tasks.html - 작업 관리 페이지",
+      "api/tasks.php - 작업 관리 API",
+      "css/tasks.css - 작업 관리 스타일",
+      "js/tasks.js - 작업 관리 로직"
+    ],
+    "created_at": "2025-01-26",
+    "updated_at": "2025-01-26"
+  },
+  {
+    "id": "BPR_PROCESS_MAP_BASIC",
+    "task": "프로세스 맵 기본 기능",
+    "description": "간단한 프로세스 맵 생성 및 편집 기능 (Canvas 기반)",
+    "status": "pending",
+    "priority": "low",
+    "type": "frontend",
+    "estimated_hours": 25,
+    "requirements": [
+      "Canvas 기반 프로세스 맵 에디터",
+      "드래그 앤 드롭으로 작업 배치",
+      "화살표 연결선 그리기",
+      "프로세스 맵 저장/불러오기",
+      "PNG 내보내기 기능"
+    ],
+    "deliverables": [
+      "process-map.html - 프로세스 맵 에디터",
+      "css/process-map.css - 에디터 스타일",
+      "js/process-map.js - 에디터 로직",
+      "js/canvas-engine.js - Canvas 렌더링 엔진"
+    ],
+    "created_at": "2025-01-26",
+    "updated_at": "2025-01-26"
+  },
+  {
+    "id": "BPR_AI_INTEGRATION",
+    "task": "AI 기능 기본 통합 (OpenAI API)",
+    "description": "프리미엄 사용자 대상 기본 AI 기능 1-2개 구현",
+    "status": "pending",
+    "priority": "low",
+    "type": "backend",
+    "estimated_hours": 20,
+    "requirements": [
+      "OpenAI API 연동",
+      "Task 매뉴얼 자동 생성 기능",
+      "사용량 추적 (토큰 카운터)",
+      "프리미엄 권한 검증"
+    ],
+    "deliverables": [
+      "api/ai.php - AI API 엔드포인트",
+      "includes/openai.php - OpenAI 클라이언트",
+      "js/ai-features.js - AI 기능 UI"
+    ],
+    "created_at": "2025-01-26",
+    "updated_at": "2025-01-26"
+  },
+  {
+    "id": "BPR_TESTING",
+    "task": "Playwright를 이용한 기능 테스트",
+    "description": "개발된 기능들의 E2E 테스트 작성 및 실행",
+    "status": "pending",
+    "priority": "medium",
+    "type": "testing",
+    "estimated_hours": 8,
+    "requirements": [
+      "회원가입/로그인 테스트",
+      "조직 생성 테스트",
+      "작업 등록 테스트",
+      "대시보드 접근 테스트"
+    ],
+    "deliverables": [
+      "tests/auth.spec.js - 인증 테스트",
+      "tests/organization.spec.js - 조직 관리 테스트",
+      "tests/tasks.spec.js - 작업 관리 테스트"
+    ],
+    "created_at": "2025-01-26",
+    "updated_at": "2025-01-26"
+  },
+  {
+    "id": "BPR_DEPLOYMENT",
+    "task": "배포 및 운영 설정",
+    "description": "dothome.co.kr 환경에 맞는 배포 설정 및 최적화",
+    "status": "pending",
+    "priority": "low",
+    "type": "devops",
+    "estimated_hours": 6,
+    "requirements": [
+      "PHP 8.4 환경 최적화",
+      "MySQL 8.0 연결 설정",
+      "파일 업로드 최적화 (500MB 제한)",
+      "에러 로깅 설정"
+    ],
+    "deliverables": [
+      ".htaccess - Apache 설정",
+      "config/production.php - 운영 환경 설정",
+      "deploy.md - 배포 가이드"
+    ],
+    "created_at": "2025-01-26",
+    "updated_at": "2025-01-26"
+  }
+]

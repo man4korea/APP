@@ -32,9 +32,9 @@ dothome.co.kr웹호스팅 정보
 
 웹서버/FTP 정보
   웹서버 아이피	112.175.185.144	  웹서버 정보	Apache 2.4
-  PHP 버전	PHP 8.4	  PHP 버전 변경	
-8.4
-     웹루트 디렉토리	/hosting/kdvdms/html
+  PHP 버전	PHP 8.4	  
+
+  웹루트 디렉토리	/hosting/kdvdms/html
   FTP 아이디	kdvdms	  FTP 암호	dmlwjdqn!Wkd24
   FTP 접속설정	접속허용
   

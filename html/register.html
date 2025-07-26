@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 - BPR Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .register-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo i {
+            font-size: 3rem;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        
+        .logo h1 {
+            color: #1e293b;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .register-form {
+            width: 100%;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 600;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .btn-register {
+            width: 100%;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: transform 0.2s ease;
+        }
+        
+        .btn-register:hover {
+            transform: translateY(-2px);
+        }
+        
+        .login-link {
+            text-align: center;
+            color: #6b7280;
+        }
+        
+        .login-link a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .back-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-home:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .success-message {
+            background: #f0fdf4;
+            color: #16a34a;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        /* 소셜 로그인 스타일 */
+        .social-login-section {
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+        
+        .divider span {
+            padding: 0 15px;
+        }
+        
+        .social-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .btn-social {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn-social:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn-kakao {
+            background: #fee500;
+            color: #3c1e1e;
+            border: 1px solid #fde047;
+        }
+        
+        .btn-kakao:hover {
+            background: #fde047;
+        }
+        
+        .btn-google {
+            background: white;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        
+        .btn-google:hover {
+            background: #f9fafb;
+        }
+        
+        .social-icon {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <a href="bpr-index.html" class="back-home">
+        <i class="fas fa-arrow-left"></i>
+        홈으로 돌아가기
+    </a>
+    
+    <div class="register-container">
+        <div class="logo">
+            <i class="fas fa-project-diagram"></i>
+            <h1>BPR Hub 회원가입</h1>
+        </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+        
+        <!-- 소셜 로그인 섹션 -->
+        <div class="social-login-section">
+            <div class="social-buttons">
+                <button type="button" class="btn-social btn-kakao" onclick="registerWithKakao()">
+                    <span class="social-icon">💬</span>
+                    카카오톡으로 가입하기
+                </button>
+                <button type="button" class="btn-social btn-google" onclick="registerWithGoogle()">
+                    <span class="social-icon">🌐</span>
+                    구글 계정으로 가입하기
+                </button>
+            </div>
+            
+            <div class="divider">
+                <span>또는</span>
+            </div>
+        </div>
+        
+        <form class="register-form" id="registerForm">
+            <div class="form-group">
+                <label for="email">이메일 주소</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" name="password" required minlength="6">
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">비밀번호 확인</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required minlength="6">
+            </div>
+            
+            <div class="form-group">
+                <label for="organizationName">조직명 (선택사항)</label>
+                <input type="text" id="organizationName" name="organizationName" placeholder="회사명 또는 조직명">
+            </div>
+            
+            <button type="submit" class="btn-register">
+                <i class="fas fa-user-plus"></i>
+                회원가입
+            </button>
+        </form>
+        
+        <div class="login-link">
+            이미 계정이 있으신가요? <a href="login.html">로그인</a>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const organizationName = document.getElementById('organizationName').value;
+            
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            
+            // 에러 메시지 초기화
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            
+            // 유효성 검사
+            if (password !== confirmPassword) {
+                showError('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showError('비밀번호는 최소 6자 이상이어야 합니다.');
+                return;
+            }
+            
+            // 임시로 로컬 스토리지에 저장 (실제로는 서버로 전송)
+            const userData = {
+                email: email,
+                password: password, // 실제로는 암호화 필요
+                organizationName: organizationName,
+                registeredAt: new Date().toISOString()
+            };
+            
+            try {
+                localStorage.setItem('bpr_user_' + email, JSON.stringify(userData));
+                showSuccess('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.');
+                
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                
+            } catch (error) {
+                showError('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
+            }
+        });
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+        
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+        
+        // 소셜 로그인 함수들
+        function registerWithKakao() {
+            showSuccess('카카오톡 로그인 연동을 시작합니다...');
+            
+            // 실제 카카오 SDK 연동 시뮬레이션
+            setTimeout(() => {
+                const kakaoUserData = {
+                    email: 'kakao_user_' + Math.random().toString(36).substr(2, 9) + '@kakao.com',
+                    password: 'kakao_auto_generated',
+                    organizationName: '',
+                    registeredAt: new Date().toISOString(),
+                    loginType: 'kakao',
+                    socialId: 'kakao_' + Math.random().toString(36).substr(2, 15)
+                };
+                
+                try {
+                    localStorage.setItem('bpr_user_' + kakaoUserData.email, JSON.stringify(kakaoUserData));
+                    sessionStorage.setItem('bpr_current_user', JSON.stringify(kakaoUserData));
+                    
+                    showSuccess('카카오톡 계정으로 회원가입이 완료되었습니다! 대시보드로 이동합니다.');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                    
+                } catch (error) {
+                    showError('카카오톡 로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
+                }
+            }, 1500);
+        }
+        
+        function registerWithGoogle() {
+            showSuccess('구글 계정 로그인 연동을 시작합니다...');
+            
+            // 실제 Google OAuth 연동 시뮬레이션
+            setTimeout(() => {
+                const googleUserData = {
+                    email: 'google_user_' + Math.random().toString(36).substr(2, 9) + '@gmail.com',
+                    password: 'google_auto_generated',
+                    organizationName: '',
+                    registeredAt: new Date().toISOString(),
+                    loginType: 'google',
+                    socialId: 'google_' + Math.random().toString(36).substr(2, 15)
+                };
+                
+                try {
+                    localStorage.setItem('bpr_user_' + googleUserData.email, JSON.stringify(googleUserData));
+                    sessionStorage.setItem('bpr_current_user', JSON.stringify(googleUserData));
+                    
+                    showSuccess('구글 계정으로 회원가입이 완료되었습니다! 대시보드로 이동합니다.');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                    
+                } catch (error) {
+                    showError('구글 로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
+                }
+            }, 1500);
+        }
+        
+        console.log('🚀 BPR 회원가입 페이지 로딩 완료');
+    </script>
+</body>
+</html>

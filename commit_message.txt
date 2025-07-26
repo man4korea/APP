@@ -1,1 +1,0 @@
-feat: Configure Gemini MCP environment and add bpr project

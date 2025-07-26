@@ -62,4 +62,8 @@ node_modules/
 
 # Ignore all .env files
 .env*
-*.env.* 
+*.env.*
+
+# npm
+package.json
+package-lock.json 

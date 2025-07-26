@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대시보드 - BPR Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 0 20px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            color: #2563eb;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-info {
+            color: #374151;
+            font-weight: 600;
+        }
+        
+        .btn-logout {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .btn-logout:hover {
+            background: #dc2626;
+        }
+        
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .welcome-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .welcome-title {
+            color: #1e293b;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-description {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .stat-icon.processes { color: #2563eb; }
+        .stat-icon.tasks { color: #059669; }
+        .stat-icon.members { color: #7c3aed; }
+        .stat-icon.ai { color: #dc2626; }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        /* Action Cards */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .action-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .action-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #2563eb;
+        }
+        
+        .action-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        
+        .action-description {
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+        
+        .btn-action {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .btn-action:hover {
+            transform: translateY(-1px);
+        }
+        
+        /* Demo Notice */
+        .demo-notice {
+            background: linear-gradient(135deg, #fef3c7, #fed7aa);
+            border: 1px solid #f59e0b;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .demo-notice h3 {
+            color: #92400e;
+            margin-bottom: 5px;
+        }
+        
+        .demo-notice p {
+            color: #a16207;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-project-diagram"></i>
+            <span>BPR Hub</span>
+        </div>
+        <div class="user-menu">
+            <span class="user-info" id="userEmail">사용자</span>
+            <button class="btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> 로그아웃
+            </button>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="demo-notice" id="demoNotice" style="display: none;">
+            <h3><i class="fas fa-info-circle"></i> 데모 모드</h3>
+            <p>현재 데모 계정으로 접속하셨습니다. 모든 기능을 체험해보세요!</p>
+        </div>
+        
+        <div class="welcome-section">
+            <h1 class="welcome-title">안녕하세요! <span id="userName"></span>님</h1>
+            <p class="welcome-description">BPR Hub 대시보드에 오신 것을 환영합니다. 여기서 프로세스 분석과 최적화를 시작하세요.</p>
+        </div>
+        
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon processes">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <div class="stat-number">3</div>
+                <div class="stat-label">프로세스 맵</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon tasks">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="stat-number">12</div>
+                <div class="stat-label">등록된 작업</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon members">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number">5</div>
+                <div class="stat-label">팀 구성원</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon ai">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="stat-number">2</div>
+                <div class="stat-label">남은 AI 분석</div>
+            </div>
+        </div>
+        
+        <!-- Action Grid -->
+        <div class="action-grid">
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <h3 class="action-title">새 프로세스 맵 생성</h3>
+                <p class="action-description">비즈니스 프로세스를 시각화하고 분석을 시작하세요.</p>
+                <button class="btn-action" onclick="alert('프로세스 맵 기능은 개발 중입니다!')">
+                    생성하기
+                </button>
+            </div>
+            
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <h3 class="action-title">조직 관리</h3>
+                <p class="action-description">팀 구성원을 추가하고 조직 구조를 설정하세요.</p>
+                <button class="btn-action" onclick="alert('조직 관리 기능은 개발 중입니다!')">
+                    관리하기
+                </button>
+            </div>
+            
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="action-title">AI 분석 요청</h3>
+                <p class="action-description">AI의 도움으로 프로세스를 분석하고 개선점을 찾으세요.</p>
+                <button class="btn-action" onclick="alert('AI 분석 기능은 개발 중입니다!')">
+                    분석 시작
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // 페이지 로딩 시 사용자 정보 확인
+        document.addEventListener('DOMContentLoaded', function() {
+            const userDataString = sessionStorage.getItem('bpr_current_user');
+            
+            if (!userDataString) {
+                // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+                alert('로그인이 필요합니다.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                const userData = JSON.parse(userDataString);
+                const email = userData.email;
+                const organizationName = userData.organizationName || '';
+                
+                // 사용자 정보 표시
+                document.getElementById('userEmail').textContent = email;
+                document.getElementById('userName').textContent = email.split('@')[0];
+                
+                // 데모 계정 또는 소셜 로그인인 경우 알림 표시
+                if (userData.userType === 'demo') {
+                    document.getElementById('demoNotice').style.display = 'block';
+                } else if (userData.loginType === 'kakao') {
+                    const demoNotice = document.getElementById('demoNotice');
+                    demoNotice.innerHTML = '<h3><i class="fas fa-comment"></i> 카카오톡 로그인</h3><p>카카오톡 계정으로 로그인하셨습니다. 모든 기능을 이용해보세요!</p>';
+                    demoNotice.style.background = 'linear-gradient(135deg, #fee500, #fde047)';
+                    demoNotice.style.borderColor = '#eab308';
+                    demoNotice.querySelector('h3').style.color = '#a16207';
+                    demoNotice.querySelector('p').style.color = '#92400e';
+                    demoNotice.style.display = 'block';
+                } else if (userData.loginType === 'google') {
+                    const demoNotice = document.getElementById('demoNotice');
+                    demoNotice.innerHTML = '<h3><i class="fas fa-globe"></i> 구글 계정 로그인</h3><p>구글 계정으로 로그인하셨습니다. 모든 기능을 이용해보세요!</p>';
+                    demoNotice.style.background = 'linear-gradient(135deg, #dbeafe, #bfdbfe)';
+                    demoNotice.style.borderColor = '#3b82f6';
+                    demoNotice.querySelector('h3').style.color = '#1e40af';
+                    demoNotice.querySelector('p').style.color = '#1d4ed8';
+                    demoNotice.style.display = 'block';
+                }
+                
+                console.log('✅ 사용자 로그인 확인:', email);
+                
+            } catch (error) {
+                console.error('❌ 사용자 데이터 파싱 오류:', error);
+                alert('세션 정보가 손상되었습니다. 다시 로그인해주세요.');
+                sessionStorage.removeItem('bpr_current_user');
+                window.location.href = 'login.html';
+            }
+        });
+        
+        function logout() {
+            if (confirm('정말 로그아웃하시겠습니까?')) {
+                sessionStorage.removeItem('bpr_current_user');
+                alert('로그아웃되었습니다.');
+                window.location.href = 'bpr-index.html';
+            }
+        }
+        
+        console.log('📊 BPR 대시보드 로딩 완료');
+    </script>
+</body>
+</html>
