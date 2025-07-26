@@ -3,10 +3,11 @@
     "id": "BPR_HOMEPAGE",
     "task": "BPR 서비스 홈페이지 개발",
     "description": "BPR 프로젝트 소개 및 서비스 안내를 위한 랜딩 페이지 제작",
-    "status": "pending",
+    "status": "completed",
     "priority": "high",
     "type": "frontend",
     "estimated_hours": 8,
+    "actual_hours": 4,
     "requirements": [
       "서비스 소개 섹션",
       "핵심 기능 설명",
@@ -15,12 +16,13 @@
       "회원가입/로그인 링크"
     ],
     "deliverables": [
-      "index.html - 메인 홈페이지",
+      "bpr-index.html - 메인 홈페이지",
       "css/bpr-home.css - 홈페이지 스타일",
       "js/bpr-home.js - 홈페이지 인터랙션"
     ],
     "created_at": "2025-01-26",
-    "updated_at": "2025-01-26"
+    "updated_at": "2025-01-26",
+    "completed_at": "2025-01-26"
   },
   {
     "id": "BPR_AUTH",
@@ -50,10 +52,11 @@
     "id": "BPR_DATABASE",
     "task": "BPR Pilot 데이터베이스 설계",
     "description": "필수 기능만으로 축소된 데이터베이스 스키마 설계 및 구축",
-    "status": "pending",
+    "status": "completed",
     "priority": "high",
     "type": "database",
     "estimated_hours": 6,
+    "actual_hours": 6,
     "requirements": [
       "users 테이블 (기본 사용자 정보)",
       "organizations 테이블 (조직 정보)",
@@ -67,7 +70,8 @@
       "docs/database_schema.md - DB 스키마 문서"
     ],
     "created_at": "2025-01-26",
-    "updated_at": "2025-01-26"
+    "updated_at": "2025-01-26",
+    "completed_at": "2025-01-26"
   },
   {
     "id": "BPR_DASHBOARD",

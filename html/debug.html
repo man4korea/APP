@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Debug Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .test-box {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .highlight {
+            color: #2563eb !important;
+            font-weight: 900 !important;
+            background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+        @supports not (-webkit-background-clip: text) {
+            .highlight {
+                color: #2563eb !important;
+                -webkit-text-fill-color: unset !important;
+                background: none !important;
+            }
+        }
+        .debug-info {
+            background: #333;
+            color: #0f0;
+            padding: 15px;
+            font-family: monospace;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-box">
+        <h1>🔍 BPR 디버그 테스트</h1>
+        <p><strong>현재 시간:</strong> <span id="time"></span></p>
+        <p><strong>브라우저:</strong> <span id="browser"></span></p>
+    </div>
+
+    <div class="test-box">
+        <h2>HTML 렌더링 테스트</h2>
+        <h1>AI와 함께하는<br><span class="highlight">비즈니스 프로세스 혁신</span></h1>
+        <p>위 텍스트에서 "비즈니스 프로세스 혁신" 부분이 파란색으로 강조되어 보여야 합니다.</p>
+    </div>
+
+    <div class="test-box">
+        <h2>CSS 적용 테스트</h2>
+        <div style="color: red;">이 텍스트는 빨간색이어야 합니다</div>
+        <div class="highlight">이 텍스트는 파란색 그라데이션이어야 합니다</div>
+    </div>
+
+    <div class="debug-info">
+        <div>✅ HTML 파싱: 정상</div>
+        <div>✅ CSS 로딩: <span id="css-status">확인중...</span></div>
+        <div>✅ 인코딩: UTF-8</div>
+        <div>📍 파일 위치: http://kdvdms.dothome.co.kr/debug.html</div>
+    </div>
+
+    <script>
+        // 현재 시간 표시
+        document.getElementById('time').textContent = new Date().toLocaleString('ko-KR');
+        
+        // 브라우저 정보
+        document.getElementById('browser').textContent = navigator.userAgent;
+        
+        // CSS 적용 확인
+        setTimeout(() => {
+            const highlight = document.querySelector('.highlight');
+            const computedStyle = window.getComputedStyle(highlight);
+            const color = computedStyle.getPropertyValue('color');
+            
+            document.getElementById('css-status').textContent = 
+                color.includes('37, 99, 235') || color.includes('rgb(37, 99, 235)') ? 
+                '정상 (파란색 적용됨)' : `문제 있음 (색상: ${color})`;
+        }, 100);
+        
+        // 문제 진단
+        console.log('=== BPR 디버그 정보 ===');
+        console.log('URL:', window.location.href);
+        console.log('문서 준비 상태:', document.readyState);
+        console.log('CSS 파일 로딩 상태:', document.styleSheets.length + '개 로딩됨');
+    </script>
+</body>
+</html>

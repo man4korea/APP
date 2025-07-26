@@ -1,0 +1,56 @@
+🔍 주요 원인 분석
+템플릿 엔진 또는 서버사이드 렌더링 오류
+
+ejs, php, jsp, handlebars 같은 템플릿 엔진에서 escape 처리되어 < 기호가 &lt;로 출력되었을 가능성.
+
+예: &lt;span class="highlight"&gt; 로 변환되면, 화면에 그대로 <span class="highlight">로 보입니다.
+
+HTML을 문자열로 출력
+
+JavaScript에서 innerText 또는 textContent 로 삽입 시 HTML이 문자열로 처리됩니다.
+
+예:
+
+javascript
+복사
+편집
+element.innerText = '<span class="highlight">텍스트</span>';
+이렇게 하면 HTML이 파싱되지 않고 그대로 보입니다.
+
+백엔드 또는 CMS 시스템이 HTML 인코딩 중
+
+예: WordPress나 템플릿 엔진에서 HTML 삽입 시 자동 escape
+
+✅ 해결 방법
+💡 HTML 그대로 넣기 (innerHTML 사용 예)
+js
+복사
+편집
+document.getElementById("my-element").innerHTML = '<span class="highlight">비즈니스 프로세스 혁신</span>';
+💡 템플릿 엔진 escape 방지
+ejs: <%- html %> 사용
+
+blade: {!! html !!} 사용
+
+handlebars: {{{ html }}} 사용
+
+PHP: echo html_entity_decode($html);
+
+✅ 현재 HTML 파일(bpr-index.html)은 정상임
+업로드하신 bpr-index.html은 해당 부분이 정상적으로 HTML 태그로 작성되어 있습니다
+. 따라서 현재 문제는:
+
+이 HTML이 어떻게 브라우저에 전달되는지, 혹은
+
+JavaScript 또는 서버에서 어떻게 이 문자열을 렌더링하고 있는지
+
+그 과정에서 태그가 escape되고 있다는 것이 핵심입니다.
+
+🔧 조치 순서 제안
+텍스트가 삽입되는 DOM 요소 확인 (innerText vs innerHTML)
+
+서버 템플릿 렌더링 시 escape 여부 확인
+
+HTML을 그대로 출력하려면 innerHTML이나 non-escaped tag 사용
+
+개발자 도구(F12) → Elements 탭에서 해당 부분 확인
