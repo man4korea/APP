@@ -1,0 +1,151 @@
+/* 📁 C:\xampp\htdocs\BPM\assets\css\variables.css */
+/* Create at 2508022320 Ver1.00 */
+
+/**
+ * BPM 모듈별 색상 테마 변수 정의
+ * 10개 모듈별 무지개 색상 시스템
+ */
+
+:root {
+  /* 🔴 조직관리 (빨강) */
+  --module-organization-primary: #ff6b6b;
+  --module-organization-secondary: #ff5252;
+  --module-organization-light: #fff5f5;
+  --module-organization-dark: #d32f2f;
+  --module-organization-text: #ffffff;
+
+  /* 🟠 구성원관리 (주황) */
+  --module-members-primary: #ff9f43;
+  --module-members-secondary: #ff8f00;
+  --module-members-light: #fff8f0;
+  --module-members-dark: #ef6c00;
+  --module-members-text: #ffffff;
+
+  /* 🟡 Task관리 (노랑) */
+  --module-tasks-primary: #feca57;
+  --module-tasks-secondary: #fbc02d;
+  --module-tasks-light: #fffcf0;
+  --module-tasks-dark: #f57f17;
+  --module-tasks-text: #333333;
+
+  /* 🟢 문서관리 (초록) */
+  --module-documents-primary: #55a3ff;
+  --module-documents-secondary: #42a5f5;
+  --module-documents-light: #f0fff4;
+  --module-documents-dark: #1976d2;
+  --module-documents-text: #ffffff;
+
+  /* 🔵 Process Map관리 (파랑) */
+  --module-processes-primary: #3742fa;
+  --module-processes-secondary: #3f51b5;
+  --module-processes-light: #f0f8ff;
+  --module-processes-dark: #1a237e;
+  --module-processes-text: #ffffff;
+
+  /* 🟣 업무Flow관리 (보라) */
+  --module-workflows-primary: #a55eea;
+  --module-workflows-secondary: #9c27b0;
+  --module-workflows-light: #f8f0ff;
+  --module-workflows-dark: #4a148c;
+  --module-workflows-text: #ffffff;
+
+  /* 🟤 직무분석 (갈색) */
+  --module-analytics-primary: #8b4513;
+  --module-analytics-secondary: #795548;
+  --module-analytics-light: #faf0e6;
+  --module-analytics-dark: #3e2723;
+  --module-analytics-text: #ffffff;
+
+  /* ⚫ 업무혁신관리 (검정) */
+  --module-innovation-primary: #2f3542;
+  --module-innovation-secondary: #424242;
+  --module-innovation-light: #f5f5f5;
+  --module-innovation-dark: #212121;
+  --module-innovation-text: #ffffff;
+
+  /* ⚪ 인사관리 (흰색/회색) */
+  --module-hr-primary: #f1f2f6;
+  --module-hr-secondary: #ecf0f1;
+  --module-hr-light: #ffffff;
+  --module-hr-dark: #bdc3c7;
+  --module-hr-text: #333333;
+
+  /* 🩷 목표성과관리 (핑크) */
+  --module-performance-primary: #ff6b9d;
+  --module-performance-secondary: #e91e63;
+  --module-performance-light: #fce4ec;
+  --module-performance-dark: #ad1457;
+  --module-performance-text: #ffffff;
+
+  /* 공통 시스템 색상 */
+  --primary-color: #3742fa;
+  --secondary-color: #57606f;
+  --success-color: #2ed573;
+  --warning-color: #ffa502;
+  --error-color: #ff4757;
+  --info-color: #3742fa;
+
+  /* 그레이스케일 */
+  --gray-50: #f8f9fa;
+  --gray-100: #f1f3f4;
+  --gray-200: #e8eaed;
+  --gray-300: #dadce0;
+  --gray-400: #bdc1c6;
+  --gray-500: #9aa0a6;
+  --gray-600: #80868b;
+  --gray-700: #5f6368;
+  --gray-800: #3c4043;
+  --gray-900: #202124;
+
+  /* 레이아웃 */
+  --header-height: 60px;
+  --sidebar-width: 280px;
+  --sidebar-collapsed-width: 60px;
+  --content-padding: 24px;
+  --border-radius: 8px;
+  --border-radius-sm: 4px;
+  --border-radius-lg: 12px;
+
+  /* 그림자 */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* 애니메이션 */
+  --transition-fast: 0.15s ease-in-out;
+  --transition-normal: 0.3s ease-in-out;
+  --transition-slow: 0.5s ease-in-out;
+
+  /* 폰트 */
+  --font-family-primary: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+
+  /* 폰트 크기 */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+
+  /* 폰트 굵기 */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Z-인덱스 */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+}
