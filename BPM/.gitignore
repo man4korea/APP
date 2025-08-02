@@ -1,0 +1,73 @@
+# 📁 C:\xampp\htdocs\BPM\.gitignore
+# Create at 2508021941 Ver1.01
+
+# BPM Total Business Process Management - Git 무시 목록
+# .env 파일의 설정을 기반으로 보안 파일 제외
+
+# 환경 설정 파일
+.env
+.env.local
+.env.production
+
+# 로그 파일
+logs/
+*.log
+error_log
+access_log
+
+# 업로드 파일
+uploads/*
+!uploads/.gitkeep
+
+# 캐시 및 임시 파일
+cache/
+temp/
+tmp/
+*.tmp
+*.cache
+
+# 데이터베이스 백업
+*.sql.backup
+*.db.backup
+
+# 시스템 파일
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE 및 에디터 설정
+.vscode/
+.idea/
+*.sublime-*
+
+# 패키지 매니저
+node_modules/
+vendor/
+composer.lock
+package-lock.json
+
+# 운영 환경 설정
+config/production.php
+config/staging.php
+
+# 보안 관련 파일
+*.pem
+*.key
+*.cert
+private_keys/
+
+# 문서화 임시 파일
+*.md~
+*.md.backup
+
+# PHP 세션 파일
+sessions/
+
+# 압축 파일
+*.zip
+*.tar.gz
+*.rar
+
+# Claude AI 내부 파일
+.claude/
+!.claude/instructions.md

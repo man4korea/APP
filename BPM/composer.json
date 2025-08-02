@@ -1,0 +1,108 @@
+{
+    "name": "bpm/total-business-process-management",
+    "description": "BPM Total Business Process Management SaaS - 멀티테넌트 비즈니스 프로세스 관리 시스템",
+    "type": "project",
+    "version": "1.0.0",
+    "keywords": ["bpm", "business-process", "management", "saas", "multitenant"],
+    "homepage": "http://localhost/BPM",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "BPM Development Team",
+            "email": "dev@bpm-system.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-curl": "*",
+        "ext-gd": "*",
+        "firebase/php-jwt": "^6.8",
+        "phpmailer/phpmailer": "^6.8",
+        "league/flysystem": "^3.15",
+        "monolog/monolog": "^3.4",
+        "ramsey/uuid": "^4.7",
+        "respect/validation": "^2.2",
+        "vlucas/phpdotenv": "^5.5",
+        "league/oauth2-server": "^8.5",
+        "predis/predis": "^2.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.3",
+        "phpstan/phpstan": "^1.10",
+        "squizlabs/php_codesniffer": "^3.7",
+        "phpmd/phpmd": "^2.13",
+        "friendsofphp/php-cs-fixer": "^3.22"
+    },
+    "suggest": {
+        "ext-redis": "Redis 캐싱 성능 향상을 위해 필요",
+        "ext-imagick": "고급 이미지 처리를 위해 권장",
+        "ext-zip": "파일 압축/해제 기능을 위해 필요"
+    },
+    "autoload": {
+        "psr-4": {
+            "BPM\\": "src/",
+            "BPM\\Core\\": "core/",
+            "BPM\\Modules\\": "modules/",
+            "BPM\\Shared\\": "shared/"
+        },
+        "files": [
+            "includes/config.php",
+            "core/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BPM\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit --testdox",
+        "test-coverage": "phpunit --coverage-html coverage",
+        "analyze": "phpstan analyse src core modules shared --level=8",
+        "cs-check": "phpcs --standard=PSR12 src core modules shared",
+        "cs-fix": "phpcbf --standard=PSR12 src core modules shared",
+        "quality": [
+            "@cs-check",
+            "@analyze",
+            "@test"
+        ],
+        "post-install-cmd": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "deploy": [
+            "@quality",
+            "php scripts/deploy.php"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "extra": {
+        "bpm": {
+            "version": "1.0.0",
+            "build-date": "2025-08-02",
+            "modules": [
+                "organization",
+                "members", 
+                "tasks",
+                "documents",
+                "processes",
+                "workflows",
+                "analytics"
+            ]
+        }
+    }
+}
