@@ -1,0 +1,707 @@
+/* 📁 C:\xampp\htdocs\BPM\assets\css\header.css */
+/* Create at 2508031550 Ver1.00 */
+
+/**
+ * BPM 메인 헤더 스타일
+ * EASYCORP 브랜딩 및 네비게이션
+ * 모듈: 공통 헤더 (색상: #3742fa)
+ */
+
+/* ========================================
+   메인 헤더 레이아웃
+   ======================================== */
+
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
+  z-index: var(--z-fixed);
+  transition: all var(--transition-normal);
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 var(--content-padding);
+  max-width: 100%;
+}
+
+/* ========================================
+   좌측 브랜딩 영역
+   ======================================== */
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  min-width: 0; /* Flexbox 텍스트 overflow 처리 */
+}
+
+/* 사이드바 토글 버튼 */
+.sidebar-toggle {
+  display: none; /* 데스크톱에서는 숨김 */
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  border-radius: var(--border-radius);
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.sidebar-toggle:hover {
+  background: var(--gray-100);
+  color: var(--gray-800);
+}
+
+.sidebar-toggle:active {
+  transform: scale(0.95);
+}
+
+/* 브랜드 섹션 */
+.brand-section {
+  display: flex;
+  align-items: center;
+}
+
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--transition-fast);
+}
+
+.brand-link:hover {
+  transform: translateY(-1px);
+}
+
+/* EASYCORP 로고 */
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, #5a67d8 100%);
+  border-radius: var(--border-radius);
+  color: white;
+  box-shadow: var(--shadow);
+  transition: all var(--transition-fast);
+}
+
+.brand-link:hover .logo-container {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
+}
+
+.logo-svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* 브랜드 텍스트 */
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--gray-900);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.product-name {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+/* 현재 모듈 표시 */
+.current-module-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--gray-50);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--gray-200);
+}
+
+.module-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.module-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--gray-700);
+}
+
+/* ========================================
+   우측 기능 영역
+   ======================================== */
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* 헤더 액션 버튼들 */
+.header-action-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  border-radius: var(--border-radius);
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.header-action-btn:hover {
+  background: var(--gray-100);
+  color: var(--gray-800);
+  transform: translateY(-1px);
+}
+
+.header-action-btn:active {
+  transform: scale(0.95) translateY(0);
+}
+
+/* 알림 배지 */
+.notification-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  background: var(--error-color);
+  color: white;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  line-height: 18px;
+  text-align: center;
+}
+
+/* ========================================
+   사용자 메뉴
+   ======================================== */
+
+.user-menu-container {
+  position: relative;
+}
+
+.user-menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 4px 4px;
+  border: none;
+  background: transparent;
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.user-menu-trigger:hover {
+  background: var(--gray-100);
+}
+
+.user-menu-trigger[aria-expanded="true"] {
+  background: var(--gray-100);
+}
+
+/* 사용자 아바타 */
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-text {
+  color: white;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* 사용자 정보 (데스크톱) */
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  text-align: left;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--gray-900);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.user-role {
+  font-size: var(--font-size-xs);
+  color: var(--gray-500);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.dropdown-arrow {
+  color: var(--gray-400);
+  transition: transform var(--transition-fast);
+}
+
+.user-menu-trigger[aria-expanded="true"] .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+/* ========================================
+   사용자 드롭다운 메뉴
+   ======================================== */
+
+.user-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 280px;
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all var(--transition-fast);
+  z-index: var(--z-dropdown);
+}
+
+.user-dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.user-full-info .user-name {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--gray-900);
+  margin-bottom: 4px;
+  max-width: none;
+}
+
+.user-email {
+  font-size: var(--font-size-sm);
+  color: var(--gray-600);
+  margin-bottom: 2px;
+}
+
+.user-company {
+  font-size: var(--font-size-xs);
+  color: var(--gray-500);
+  padding: 2px 8px;
+  background: var(--gray-50);
+  border-radius: var(--border-radius-sm);
+  display: inline-block;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--gray-100);
+  margin: 8px 0;
+}
+
+.dropdown-items {
+  padding: 8px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  color: var(--gray-700);
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: var(--font-size-sm);
+}
+
+.dropdown-item:hover {
+  background: var(--gray-50);
+  color: var(--gray-900);
+}
+
+.dropdown-item svg {
+  color: var(--gray-500);
+  flex-shrink: 0;
+}
+
+.logout-btn {
+  color: var(--error-color);
+}
+
+.logout-btn:hover {
+  background: #fef2f2;
+  color: var(--error-color);
+}
+
+/* ========================================
+   로그인 버튼 (비로그인 사용자)
+   ======================================== */
+
+.login-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--primary-color);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-fast);
+}
+
+.login-btn:hover {
+  background: #2d3748;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.login-btn:active {
+  transform: scale(0.98) translateY(0);
+}
+
+/* ========================================
+   검색 오버레이
+   ======================================== */
+
+.search-overlay {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all var(--transition-normal);
+  z-index: var(--z-dropdown);
+}
+
+.search-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px var(--content-padding);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.search-input {
+  flex: 1;
+  height: 44px;
+  padding: 0 16px;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-base);
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.search-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(55, 66, 250, 0.1);
+}
+
+.search-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: var(--gray-100);
+  border-radius: var(--border-radius);
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.search-close-btn:hover {
+  background: var(--gray-200);
+  color: var(--gray-800);
+}
+
+/* ========================================
+   반응형 디자인
+   ======================================== */
+
+/* 태블릿 (768px ~ 1023px) */
+@media (max-width: 1023px) {
+  .header-container {
+    padding: 0 16px;
+  }
+
+  .user-info {
+    display: none; /* 태블릿에서는 사용자 정보 텍스트 숨김 */
+  }
+
+  .current-module-indicator {
+    display: none; /* 태블릿에서는 모듈 표시 숨김 */
+  }
+
+  .brand-text .product-name {
+    display: none; /* 제품명 숨김 */
+  }
+}
+
+/* 모바일 (767px 이하) */
+@media (max-width: 767px) {
+  .sidebar-toggle {
+    display: flex; /* 모바일에서 사이드바 토글 표시 */
+  }
+
+  .header-container {
+    padding: 0 12px;
+  }
+
+  .header-left {
+    gap: 12px;
+  }
+
+  .header-right {
+    gap: 8px;
+  }
+
+  .brand-text {
+    display: none; /* 모바일에서는 브랜드 텍스트 완전 숨김 */
+  }
+
+  .search-container {
+    padding: 12px;
+  }
+
+  .user-dropdown-menu {
+    min-width: 260px;
+    right: -12px; /* 모바일에서 여백 조정 */
+  }
+
+  /* 헤더 액션 버튼 크기 조정 */
+  .header-action-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* 초소형 모바일 (480px 이하) */
+@media (max-width: 480px) {
+  .header-container {
+    padding: 0 8px;
+  }
+
+  .header-right {
+    gap: 4px;
+  }
+
+  /* 일부 버튼 숨김 */
+  .search-btn,
+  .notification-btn {
+    display: none;
+  }
+
+  .user-dropdown-menu {
+    min-width: calc(100vw - 16px);
+    right: -8px;
+    left: 8px;
+  }
+}
+
+/* ========================================
+   다크 모드 지원 (향후 확장)
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  .main-header {
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    border-bottom-color: #4a5568;
+  }
+
+  .brand-name {
+    color: #f7fafc;
+  }
+
+  .product-name {
+    color: #a0aec0;
+  }
+
+  .current-module-indicator {
+    background: #2d3748;
+    border-color: #4a5568;
+  }
+
+  .module-name {
+    color: #e2e8f0;
+  }
+
+  .header-action-btn {
+    color: #a0aec0;
+  }
+
+  .header-action-btn:hover {
+    background: #4a5568;
+    color: #f7fafc;
+  }
+
+  .user-dropdown-menu {
+    background: #2d3748;
+    border-color: #4a5568;
+  }
+
+  .dropdown-item {
+    color: #e2e8f0;
+  }
+
+  .dropdown-item:hover {
+    background: #4a5568;
+    color: #f7fafc;
+  }
+
+  .search-overlay {
+    background: #2d3748;
+    border-bottom-color: #4a5568;
+  }
+
+  .search-input {
+    background: #1a202c;
+    border-color: #4a5568;
+    color: #f7fafc;
+  }
+
+  .search-input:focus {
+    border-color: var(--primary-color);
+  }
+}
+
+/* ========================================
+   접근성 향상
+   ======================================== */
+
+/* 포커스 표시 */
+.sidebar-toggle:focus,
+.header-action-btn:focus,
+.user-menu-trigger:focus,
+.dropdown-item:focus,
+.login-btn:focus,
+.search-close-btn:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* 모션 감소 설정 */
+@media (prefers-reduced-motion: reduce) {
+  .main-header,
+  .logo-container,
+  .header-action-btn,
+  .user-menu-trigger,
+  .user-dropdown-menu,
+  .search-overlay,
+  .dropdown-arrow {
+    transition: none;
+  }
+
+  .module-dot {
+    animation: none;
+  }
+}
+
+/* 고대비 모드 */
+@media (prefers-contrast: high) {
+  .main-header {
+    border-bottom-width: 2px;
+  }
+
+  .header-action-btn:hover,
+  .user-menu-trigger:hover {
+    outline: 1px solid currentColor;
+  }
+}

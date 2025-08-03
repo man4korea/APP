@@ -162,6 +162,10 @@ function module_path(string $module, string $path = ''): string {
 /**
  * URL 생성 헬퍼
  */
+function base_url(string $path = ''): string {
+    return APP_URL . '/' . ltrim($path, '/');
+}
+
 function url(string $path = ''): string {
     return APP_URL . '/' . ltrim($path, '/');
 }
@@ -199,15 +203,31 @@ function redirect(string $url, int $status = 302): void {
  * 현재 사용자 정보 헬퍼
  */
 function current_user(): ?array {
-    if (!AuthManager::isLoggedIn()) {
-        return null;
+    // 임시 더미 데이터 (인증 시스템 구현 전까지)
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
     }
     
-    return [
-        'id' => AuthManager::getCurrentUserId(),
-        'role' => AuthManager::getCurrentUserRole(),
-        'company_id' => TenantManager::getCurrentCompanyId()
-    ];
+    // 세션에 사용자 정보가 있으면 반환
+    if (isset($_SESSION['user'])) {
+        return $_SESSION['user'];
+    }
+    
+    // 개발 모드에서는 더미 사용자 반환
+    if (APP_DEBUG) {
+        return [
+            'id' => 1,
+            'name' => '홍길동',
+            'email' => 'admin@easycorp.com',
+            'role' => 'admin',
+            'role_name' => '관리자',
+            'company_id' => 1,
+            'company_name' => 'EASYCORP',
+            'avatar' => null
+        ];
+    }
+    
+    return null;
 }
 
 /**
@@ -309,6 +329,95 @@ function __(string $key, array $replace = []): string {
     
     return $text;
 }
+
+/**
+ * 현재 모듈 감지 헬퍼
+ */
+function get_current_module(): string {
+    $path = $_SERVER['REQUEST_URI'] ?? '';
+    $path = parse_url($path, PHP_URL_PATH);
+    $segments = array_filter(explode('/', $path));
+    
+    // URL에서 모듈명 추출 (예: /BPM/organization -> organization)
+    if (count($segments) >= 2) {
+        $module = $segments[1];
+        
+        // 유효한 모듈인지 확인
+        $validModules = ['organization', 'members', 'tasks', 'documents', 'processes', 'workflows', 'analytics', 'innovation', 'hr', 'performance'];
+        
+        if (in_array($module, $validModules)) {
+            return $module;
+        }
+    }
+    
+    return 'dashboard'; // 기본값
+}
+
+/**
+ * 모듈 정보 반환 헬퍼
+ */
+function get_module_info(string $module): ?array {
+    $modules = [
+        'dashboard' => [
+            'name' => '대시보드',
+            'color' => '#3742fa',
+            'icon' => 'dashboard'
+        ],
+        'organization' => [
+            'name' => '조직관리',
+            'color' => '#ff6b6b',
+            'icon' => 'organization'
+        ],
+        'members' => [
+            'name' => '구성원관리',
+            'color' => '#ff9f43',
+            'icon' => 'members'
+        ],
+        'tasks' => [
+            'name' => 'Task관리',
+            'color' => '#feca57',
+            'icon' => 'tasks'
+        ],
+        'documents' => [
+            'name' => '문서관리',
+            'color' => '#55a3ff',
+            'icon' => 'documents'
+        ],
+        'processes' => [
+            'name' => 'Process Map관리',
+            'color' => '#3742fa',
+            'icon' => 'processes'
+        ],
+        'workflows' => [
+            'name' => '업무Flow관리',
+            'color' => '#a55eea',
+            'icon' => 'workflows'
+        ],
+        'analytics' => [
+            'name' => '직무분석',
+            'color' => '#8b4513',
+            'icon' => 'analytics'
+        ],
+        'innovation' => [
+            'name' => '업무혁신관리',
+            'color' => '#2f3542',
+            'icon' => 'innovation'
+        ],
+        'hr' => [
+            'name' => '인사관리',
+            'color' => '#f1f2f6',
+            'icon' => 'hr'
+        ],
+        'performance' => [
+            'name' => '목표성과관리',
+            'color' => '#ff6b9d',
+            'icon' => 'performance'
+        ]
+    ];
+    
+    return $modules[$module] ?? null;
+}
+
 
 // 시스템 준비 완료 로그
 BPMLogger::info('BPM System Bootstrap Completed', [

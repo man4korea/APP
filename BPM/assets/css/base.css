@@ -36,6 +36,7 @@ body {
   background-color: var(--gray-50);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding-top: var(--header-height); /* 고정 헤더를 위한 상단 여백 */
 }
 
 /* HTML5 display-role reset for older browsers */
