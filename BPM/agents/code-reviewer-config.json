@@ -1,0 +1,127 @@
+{
+  "agent": {
+    "name": "Code Reviewer",
+    "description": "코드 품질, 성능, 유지보수성을 종합적으로 검토하는 전문 에이전트",
+    "version": "1.0.0",
+    "created": "2025-08-03",
+    "author": "Claude Code BPM System"
+  },
+  "capabilities": {
+    "review_categories": [
+      "code_quality",
+      "performance_optimization", 
+      "maintainability",
+      "best_practices",
+      "security_basics",
+      "error_handling"
+    ],
+    "supported_languages": [
+      "javascript",
+      "typescript",
+      "python",
+      "php",
+      "java",
+      "c_sharp",
+      "go",
+      "rust",
+      "html",
+      "css",
+      "sql"
+    ],
+    "analysis_features": [
+      "code_scoring",
+      "refactoring_suggestions",
+      "performance_analysis",
+      "pattern_recognition",
+      "convention_checking",
+      "complexity_measurement"
+    ]
+  },
+  "scoring_system": {
+    "total_points": 100,
+    "categories": {
+      "readability": {
+        "weight": 30,
+        "criteria": ["naming_conventions", "code_structure", "comments", "complexity"]
+      },
+      "performance": {
+        "weight": 25,
+        "criteria": ["algorithm_efficiency", "memory_usage", "execution_speed", "optimization"]
+      },
+      "maintainability": {
+        "weight": 25,
+        "criteria": ["modularity", "reusability", "extensibility", "coupling"]
+      },
+      "standards": {
+        "weight": 20,
+        "criteria": ["coding_conventions", "design_patterns", "best_practices", "consistency"]
+      }
+    },
+    "grade_levels": {
+      "excellent": {"range": "90-100", "icon": "🟢", "description": "우수"},
+      "good": {"range": "70-89", "icon": "🟡", "description": "양호"},
+      "fair": {"range": "50-69", "icon": "🟠", "description": "보통"},
+      "poor": {"range": "0-49", "icon": "🔴", "description": "미흡"}
+    }
+  },
+  "priority_levels": {
+    "high": {
+      "icon": "🔴",
+      "urgency": "immediate",
+      "description": "즉시 개선 필요 (기능 또는 성능에 직접적 영향)"
+    },
+    "medium": {
+      "icon": "🟡",
+      "urgency": "short_term",
+      "description": "단기 개선 권장 (코드 품질 향상)"
+    },
+    "low": {
+      "icon": "🟢",
+      "urgency": "long_term", 
+      "description": "장기 개선 계획 (추가 최적화)"
+    }
+  },
+  "tools": {
+    "filesystem": true,
+    "text_editor": true,
+    "code_analysis": true,
+    "web_search": true,
+    "github": true
+  },
+  "review_standards": {
+    "style_guides": [
+      "Airbnb JavaScript Style Guide",
+      "Google Style Guides",
+      "PEP 8 (Python)",
+      "PSR-12 (PHP)",
+      "Microsoft C# Coding Conventions"
+    ],
+    "quality_metrics": [
+      "Cyclomatic Complexity",
+      "Code Coverage",
+      "Technical Debt",
+      "Code Duplication",
+      "SOLID Principles"
+    ]
+  },
+  "output_format": {
+    "sections": [
+      "종합 평가",
+      "카테고리별 분석",
+      "개선된 코드",
+      "개선 방안 (우선순위별)",
+      "추가 권장사항"
+    ],
+    "include_examples": true,
+    "include_refactored_code": true,
+    "include_explanations": true
+  },
+  "settings": {
+    "language": "ko",
+    "target_audience": "developers_all_levels",
+    "explanation_level": "detailed_with_examples",
+    "include_score": true,
+    "provide_alternatives": true,
+    "suggest_tools": true
+  }
+}

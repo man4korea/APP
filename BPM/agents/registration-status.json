@@ -1,0 +1,57 @@
+{
+  "timestamp": "2025-08-03T02:21:14.037Z",
+  "totalAgents": 5,
+  "completedAgents": 5,
+  "agents": [
+    {
+      "id": "code-simplifier",
+      "name": "Code Simplifier",
+      "description": "복잡한 코드를 초보자도 이해할 수 있게 간단하게 변환",
+      "files": {
+        "prompt": "✅",
+        "config": "✅",
+        "test": "✅"
+      }
+    },
+    {
+      "id": "security-reviewer",
+      "name": "Security Reviewer",
+      "description": "보안 취약점 분석 및 데이터 보호 방안 제시",
+      "files": {
+        "prompt": "✅",
+        "config": "✅",
+        "test": "✅"
+      }
+    },
+    {
+      "id": "code-reviewer",
+      "name": "Code Reviewer",
+      "description": "코드 품질, 성능, 유지보수성 종합 검토",
+      "files": {
+        "prompt": "✅",
+        "config": "✅",
+        "test": "✅"
+      }
+    },
+    {
+      "id": "tech-lead",
+      "name": "Tech Lead",
+      "description": "시스템 아키텍처 설계 및 기술적 의사결정",
+      "files": {
+        "prompt": "✅",
+        "config": "✅",
+        "test": "✅"
+      }
+    },
+    {
+      "id": "ux-reviewer",
+      "name": "UX Reviewer",
+      "description": "사용자 경험 및 인터페이스 전문 분석",
+      "files": {
+        "prompt": "✅",
+        "config": "✅",
+        "test": "✅"
+      }
+    }
+  ]
+}

@@ -1,0 +1,235 @@
+{
+  "agent": {
+    "name": "UX Reviewer",
+    "description": "사용자 경험(UX/UI) 전문가로 웹사이트와 애플리케이션의 사용성, 접근성, 인터페이스를 종합 분석하는 에이전트",
+    "version": "1.0.0",
+    "created": "2025-08-03",
+    "author": "Claude Code BPM System"
+  },
+  "capabilities": {
+    "core_competencies": [
+      "usability_analysis",
+      "accessibility_audit",
+      "responsive_design_review",
+      "user_interface_evaluation",
+      "user_journey_mapping",
+      "conversion_optimization"
+    ],
+    "analysis_frameworks": [
+      "nielsen_heuristics",
+      "wcag_guidelines",
+      "google_material_design",
+      "apple_human_interface",
+      "user_centered_design"
+    ],
+    "evaluation_areas": [
+      "navigation_structure",
+      "information_architecture",
+      "visual_hierarchy",
+      "interaction_design",
+      "performance_ux",
+      "mobile_optimization"
+    ],
+    "device_testing": [
+      "desktop_browser",
+      "mobile_phone",
+      "tablet",
+      "screen_reader",
+      "keyboard_only"
+    ]
+  },
+  "ux_evaluation_criteria": {
+    "usability": {
+      "weight": 30,
+      "subcriteria": [
+        "navigation_clarity",
+        "task_completion_ease",
+        "learning_curve",
+        "error_recovery"
+      ]
+    },
+    "accessibility": {
+      "weight": 25,
+      "subcriteria": [
+        "wcag_compliance",
+        "keyboard_navigation",
+        "screen_reader_support",
+        "color_contrast"
+      ]
+    },
+    "visual_design": {
+      "weight": 20,
+      "subcriteria": [
+        "visual_hierarchy",
+        "consistency",
+        "readability",
+        "aesthetic_appeal"
+      ]
+    },
+    "performance": {
+      "weight": 15,
+      "subcriteria": [
+        "loading_speed",
+        "responsiveness",
+        "feedback_quality",
+        "error_handling"
+      ]
+    },
+    "mobile_experience": {
+      "weight": 10,
+      "subcriteria": [
+        "touch_optimization",
+        "responsive_layout",
+        "mobile_specific_features",
+        "cross_device_consistency"
+      ]
+    }
+  },
+  "nielsen_heuristics": {
+    "visibility_of_system_status": {
+      "description": "시스템이 항상 적절한 피드백을 통해 사용자에게 현재 상황을 알려주는가?",
+      "checkpoints": ["loading_indicators", "progress_bars", "status_messages", "breadcrumbs"]
+    },
+    "match_between_system_and_real_world": {
+      "description": "시스템이 사용자의 언어를 사용하며 친숙한 개념을 따르는가?",
+      "checkpoints": ["familiar_terminology", "logical_order", "real_world_metaphors"]
+    },
+    "user_control_and_freedom": {
+      "description": "사용자가 실수를 쉽게 되돌리고 원하지 않는 상황에서 벗어날 수 있는가?",
+      "checkpoints": ["undo_redo", "cancel_options", "escape_routes", "back_button"]
+    },
+    "consistency_and_standards": {
+      "description": "플랫폼 전반에 걸쳐 일관된 규칙과 표준을 따르는가?",
+      "checkpoints": ["design_consistency", "interaction_patterns", "terminology_consistency"]
+    },
+    "error_prevention": {
+      "description": "문제가 발생하기 전에 사용자를 보호하는 설계인가?",
+      "checkpoints": ["input_validation", "confirmation_dialogs", "constraint_guidance"]
+    }
+  },
+  "accessibility_standards": {
+    "wcag_2_1_aa": {
+      "perceivable": [
+        "text_alternatives",
+        "captions_and_alternatives",
+        "adaptable_content",
+        "distinguishable_content"
+      ],
+      "operable": [
+        "keyboard_accessible",
+        "no_seizures_flashes",
+        "navigable",
+        "input_modalities"
+      ],
+      "understandable": [
+        "readable",
+        "predictable",
+        "input_assistance"
+      ],
+      "robust": [
+        "compatible_with_assistive_tech"
+      ]
+    },
+    "testing_tools": [
+      "screen_reader_simulation",
+      "keyboard_navigation_test",
+      "color_contrast_checker",
+      "automated_accessibility_scan"
+    ]
+  },
+  "priority_levels": {
+    "critical": {
+      "icon": "🚨",
+      "description": "즉시 수정 필요 - 기능 사용 불가능하거나 법적 위험",
+      "examples": ["broken_checkout", "inaccessible_forms", "mobile_unusable"]
+    },
+    "high": {
+      "icon": "⚠️",
+      "description": "빠른 개선 권장 - 사용성 크게 저하",
+      "examples": ["confusing_navigation", "slow_loading", "poor_mobile_experience"]
+    },
+    "medium": {
+      "icon": "🔄",
+      "description": "점진적 개선 - 편의성 향상",
+      "examples": ["minor_layout_issues", "enhancement_opportunities"]
+    },
+    "low": {
+      "icon": "💡",
+      "description": "장기적 개선 - 만족도 향상",
+      "examples": ["aesthetic_improvements", "advanced_features"]
+    }
+  },
+  "user_testing_methods": {
+    "quantitative": [
+      "task_completion_rate",
+      "time_on_task",
+      "error_rate",
+      "conversion_rate",
+      "bounce_rate"
+    ],
+    "qualitative": [
+      "user_interviews",
+      "usability_testing",
+      "heuristic_evaluation",
+      "cognitive_walkthrough",
+      "accessibility_audit"
+    ],
+    "ab_testing_opportunities": [
+      "call_to_action_buttons",
+      "form_layouts",
+      "navigation_structures",
+      "checkout_processes",
+      "landing_page_designs"
+    ]
+  },
+  "tools": {
+    "web_analysis": true,
+    "screenshot_capture": true,
+    "web_search": true,
+    "web_fetch": true,
+    "filesystem": true
+  },
+  "responsive_breakpoints": {
+    "mobile": "320px - 768px",
+    "tablet": "768px - 1024px", 
+    "desktop": "1024px+",
+    "large_screen": "1440px+"
+  },
+  "performance_benchmarks": {
+    "page_load_time": {
+      "excellent": "< 1 second",
+      "good": "1-3 seconds", 
+      "acceptable": "3-5 seconds",
+      "poor": "> 5 seconds"
+    },
+    "first_contentful_paint": {
+      "excellent": "< 1.2 seconds",
+      "good": "1.2-2.4 seconds",
+      "acceptable": "2.4-4 seconds", 
+      "poor": "> 4 seconds"
+    }
+  },
+  "output_format": {
+    "sections": [
+      "전반적 평가",
+      "사용자 여정 분석",
+      "디바이스별 경험",
+      "인터페이스 평가",
+      "접근성 체크리스트",
+      "성능 및 사용성 지표",
+      "사용자 테스트 제안",
+      "기술적 구현 제안"
+    ],
+    "include_screenshots": true,
+    "include_scores": true,
+    "include_actionable_items": true
+  },
+  "settings": {
+    "language": "ko",
+    "target_audience": "development_teams",
+    "analysis_depth": "comprehensive",
+    "include_competitor_analysis": false,
+    "focus_on_actionable_insights": true,
+    "provide_implementation_guides": true
+  }
+}

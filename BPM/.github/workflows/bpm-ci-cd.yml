@@ -1,0 +1,476 @@
+# 📁 C:\xampp\htdocs\BPM\.github\workflows\bmp-ci-cd.yml
+# Create at 2508031152 Ver1.00
+
+name: BPM CI/CD Pipeline
+
+# 워크플로우 트리거 조건
+on:
+  push:
+    branches: 
+      - main
+      - develop
+      - 'feature/*'
+      - 'hotfix/*'
+  pull_request:
+    branches: 
+      - main
+      - develop
+  release:
+    types: [published]
+
+# 환경 변수 정의
+env:
+  PHP_VERSION: '8.1'
+  NODE_VERSION: '18'
+  COMPOSER_CACHE_DIR: ~/.composer/cache
+  NODE_CACHE_DIR: ~/.npm
+
+# 작업 정의
+jobs:
+  # 1단계: 코드 품질 검사
+  code-quality:
+    name: 코드 품질 검사
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # SonarQube 분석을 위한 전체 히스토리
+
+      - name: PHP 환경 설정
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, redis
+          coverage: xdebug
+          tools: composer:v2
+
+      - name: Composer 캐시 설정
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Composer 의존성 설치
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: PHP 문법 검사
+        run: |
+          find . -name "*.php" -not -path "./vendor/*" -exec php -l {} \; | grep -v "No syntax errors"
+
+      - name: PHP_CodeSniffer 코드 스타일 검사
+        run: |
+          composer require --dev squizlabs/php_codesniffer
+          ./vendor/bin/phpcs --standard=PSR12 --extensions=php --ignore=vendor/ .
+
+      - name: PHPStan 정적 분석
+        run: |
+          composer require --dev phpstan/phpstan
+          ./vendor/bin/phpstan analyse --level=5 core/ modules/ includes/
+
+      - name: PHPMD 복잡도 분석
+        run: |
+          composer require --dev phpmd/phpmd
+          ./vendor/bin/phpmd core/,modules/,includes/ text cleancode,codesize,controversial,design,naming,unusedcode
+
+  # 2단계: 단위 테스트
+  unit-tests:
+    name: 단위 테스트
+    runs-on: ubuntu-latest
+    needs: code-quality
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: bpm_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+
+      - name: PHP 환경 설정
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, redis, xdebug
+          coverage: xdebug
+
+      - name: Composer 캐시 복원
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+
+      - name: Composer 의존성 설치
+        run: composer install --no-progress --prefer-dist
+
+      - name: 테스트 환경 설정
+        run: |
+          cp .env.testing .env
+          php artisan key:generate --env=testing
+          php artisan config:clear
+
+      - name: 데이터베이스 마이그레이션
+        run: |
+          mysql -h127.0.0.1 -uroot bpm_test < sql/schema.sql
+          mysql -h127.0.0.1 -uroot bmp_test < sql/test-data.sql
+
+      - name: PHPUnit 테스트 실행
+        run: |
+          composer require --dev phpunit/phpunit
+          ./vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-clover=coverage.xml
+
+      - name: 커버리지 리포트 업로드
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+
+  # 3단계: 통합 테스트 (Playwright)
+  integration-tests:
+    name: 통합 테스트
+    runs-on: ubuntu-latest
+    needs: unit-tests
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: bpm_integration
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Node.js 환경 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: PHP 환경 설정
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, redis
+
+      - name: 의존성 설치
+        run: |
+          composer install --no-dev --optimize-autoloader
+          npm ci
+
+      - name: Playwright 설치
+        run: npx playwright install --with-deps
+
+      - name: 테스트 서버 시작
+        run: |
+          cp .env.testing .env
+          mysql -h127.0.0.1 -uroot bmp_integration < sql/schema.sql
+          php -S localhost:8000 -t . &
+          sleep 5
+
+      - name: Playwright 테스트 실행
+        run: npx playwright test
+
+      - name: 테스트 결과 업로드
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+  # 4단계: 보안 스캔
+  security-scan:
+    name: 보안 스캔
+    runs-on: ubuntu-latest
+    needs: code-quality
+
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+
+      - name: PHP 환경 설정
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+
+      - name: Composer 보안 감사
+        run: |
+          composer audit
+
+      - name: Node.js 보안 감사
+        run: |
+          npm audit --audit-level moderate
+
+      - name: SAST 스캔 (SonarCloud)
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'BPM'
+          path: '.'
+          format: 'JSON'
+          out: 'reports'
+
+      - name: Snyk 보안 스캔
+        uses: snyk/actions/php@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+
+  # 5단계: 빌드 및 도커 이미지 생성
+  build:
+    name: 빌드 및 이미지 생성
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests, security-scan]
+    if: github.ref == 'refs/heads/main' || github.event_name == 'release'
+
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tags }}
+      image-digest: ${{ steps.build.outputs.digest }}
+
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Docker Buildx 설정
+        uses: docker/setup-buildx-action@v3
+
+      - name: Docker Hub 로그인
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: 메타데이터 추출
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: bpm/app
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix={{branch}}-
+
+      - name: Docker 이미지 빌드 및 푸시
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/Dockerfile.prod
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
+
+  # 6단계: 스테이징 배포
+  deploy-staging:
+    name: 스테이징 배포
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+
+      - name: AWS 자격증명 설정
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: ECS 태스크 정의 업데이트
+        run: |
+          aws ecs update-service \
+            --cluster bpm-staging \
+            --service bmp-app \
+            --force-new-deployment
+
+      - name: 배포 상태 확인
+        run: |
+          aws ecs wait services-stable \
+            --cluster bpm-staging \
+            --services bmp-app
+
+      - name: 헬스체크
+        run: |
+          curl -f https://staging.bpm.example.com/health || exit 1
+
+  # 7단계: 프로덕션 배포
+  deploy-production:
+    name: 프로덕션 배포
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'release'
+    environment: production
+
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+
+      - name: AWS 자격증명 설정
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+          aws-region: ap-northeast-2
+
+      - name: 블루-그린 배포 시작
+        run: |
+          # 새로운 태스크 정의 생성
+          TASK_DEFINITION=$(aws ecs describe-task-definition \
+            --task-definition bpm-prod \
+            --query taskDefinition)
+          
+          # 이미지 태그 업데이트
+          NEW_TASK_DEFINITION=$(echo $TASK_DEFINITION | \
+            jq --arg IMAGE "${{ needs.build.outputs.image-tag }}" \
+            '.containerDefinitions[0].image = $IMAGE')
+          
+          # 새 태스크 정의 등록
+          aws ecs register-task-definition \
+            --cli-input-json "$NEW_TASK_DEFINITION"
+
+      - name: 서비스 업데이트
+        run: |
+          aws ecs update-service \
+            --cluster bmp-production \
+            --service bpm-app \
+            --task-definition bpm-prod
+
+      - name: 배포 상태 모니터링
+        run: |
+          aws ecs wait services-stable \
+            --cluster bpm-production \
+            --services bmp-app
+
+      - name: 프로덕션 헬스체크
+        run: |
+          for i in {1..10}; do
+            if curl -f https://api.bpm.example.com/health; then
+              echo "헬스체크 성공"
+              break
+            fi
+            echo "헬스체크 시도 $i/10 실패, 30초 대기..."
+            sleep 30
+          done
+
+      - name: 롤백 스크립트 준비
+        if: failure()
+        run: |
+          echo "배포 실패, 롤백 스크립트 실행"
+          aws ecs update-service \
+            --cluster bpm-production \
+            --service bpm-app \
+            --task-definition bpm-prod:$(( $(aws ecs describe-services --cluster bpm-production --services bpm-app --query 'services[0].taskDefinition' --output text | cut -d':' -f2) - 1 ))
+
+  # 8단계: 알림 및 리포팅
+  notify:
+    name: 배포 결과 알림
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always()
+
+    steps:
+      - name: Slack 알림
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#deployments'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+
+      - name: 이메일 알림
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: '[BPM] 배포 실패 알림'
+          body: |
+            BPM 애플리케이션 배포가 실패했습니다.
+            
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref }}
+            Commit: ${{ github.sha }}
+            Workflow: ${{ github.workflow }}
+            
+            자세한 내용은 GitHub Actions에서 확인하세요.
+          to: dev-team@bpm.example.com
+          from: noreply@bpm.example.com
+
+  # 9단계: 성능 모니터링
+  performance-monitoring:
+    name: 성능 모니터링
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    if: github.event_name == 'release'
+
+    steps:
+      - name: Lighthouse CI 성능 측정
+        run: |
+          npm install -g @lhci/cli
+          lhci autorun --upload.target=filesystem --upload.outputDir=./lighthouse-results
+
+      - name: 성능 결과 업로드
+        uses: actions/upload-artifact@v3
+        with:
+          name: lighthouse-results
+          path: lighthouse-results/
+
+      - name: 성능 임계값 확인
+        run: |
+          # Lighthouse 점수가 90 미만이면 경고
+          PERFORMANCE_SCORE=$(cat lighthouse-results/manifest.json | jq '.[] | .summary.performance' | head -1)
+          if (( $(echo "$PERFORMANCE_SCORE < 0.9" | bc -l) )); then
+            echo "⚠️ 성능 점수가 90 미만입니다: $PERFORMANCE_SCORE"
+            exit 1
+          fi
+
+# 워크플로우 수준 환경 변수
+env:
+  FORCE_COLOR: 3
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# 동시 실행 제한 (같은 브랜치에서는 최신 것만 실행)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true

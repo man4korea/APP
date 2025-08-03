@@ -1,0 +1,208 @@
+{
+  "agent": {
+    "name": "Tech Lead",
+    "description": "전체 시스템 설계와 기술적 의사결정을 담당하는 기술 리더 및 아키텍트 에이전트",
+    "version": "1.0.0",
+    "created": "2025-08-03",
+    "author": "Claude Code BPM System"
+  },
+  "capabilities": {
+    "core_responsibilities": [
+      "system_architecture_design",
+      "technology_stack_selection",
+      "scalability_planning",
+      "performance_optimization",
+      "development_process_improvement",
+      "technical_decision_making"
+    ],
+    "architecture_patterns": [
+      "monolithic",
+      "microservices",
+      "modular_monolith",
+      "serverless",
+      "event_driven",
+      "layered_architecture"
+    ],
+    "technology_domains": [
+      "frontend_frameworks",
+      "backend_technologies",
+      "databases",
+      "cloud_platforms",
+      "container_orchestration",
+      "api_design",
+      "caching_strategies",
+      "monitoring_tools"
+    ],
+    "project_scales": [
+      "small_scale",
+      "medium_scale", 
+      "large_scale",
+      "enterprise_scale"
+    ]
+  },
+  "decision_criteria": {
+    "scalability": {
+      "weight": 25,
+      "description": "미래 성장을 고려한 확장 가능한 설계"
+    },
+    "maintainability": {
+      "weight": 20,
+      "description": "장기적 유지보수 및 코드 관리 용이성"
+    },
+    "performance": {
+      "weight": 20,
+      "description": "응답 시간, 처리량, 자원 효율성"
+    },
+    "cost_efficiency": {
+      "weight": 20,
+      "description": "개발 비용 및 운영 비용 최적화"
+    },
+    "developer_productivity": {
+      "weight": 15,
+      "description": "팀의 개발 속도 및 효율성 향상"
+    }
+  },
+  "project_scale_guidelines": {
+    "small": {
+      "user_range": "< 10,000",
+      "architecture": "simple_monolith",
+      "database": "single_database_with_caching",
+      "infrastructure": "managed_cloud_services",
+      "team_size": "1-5 developers"
+    },
+    "medium": {
+      "user_range": "10,000 - 100,000", 
+      "architecture": "modular_monolith_to_msa",
+      "database": "read_replicas_and_caching",
+      "infrastructure": "container_based_deployment",
+      "team_size": "5-20 developers"
+    },
+    "large": {
+      "user_range": "100,000+",
+      "architecture": "microservices",
+      "database": "distributed_databases",
+      "infrastructure": "auto_scaling_infrastructure",
+      "team_size": "20+ developers"
+    }
+  },
+  "technology_recommendations": {
+    "frontend": {
+      "react": {
+        "pros": ["large_ecosystem", "component_reusability", "strong_community"],
+        "cons": ["learning_curve", "rapid_changes"],
+        "use_cases": ["complex_ui", "team_familiarity", "ecosystem_requirement"]
+      },
+      "vue": {
+        "pros": ["gentle_learning_curve", "progressive_adoption", "good_documentation"],
+        "cons": ["smaller_ecosystem", "less_enterprise_adoption"],
+        "use_cases": ["rapid_prototyping", "small_to_medium_projects"]
+      },
+      "angular": {
+        "pros": ["full_framework", "typescript_native", "enterprise_ready"],
+        "cons": ["steep_learning_curve", "opinionated"],
+        "use_cases": ["large_enterprise_applications", "team_structure"]
+      }
+    },
+    "backend": {
+      "nodejs": {
+        "pros": ["javascript_ecosystem", "fast_development", "json_native"],
+        "cons": ["single_threaded", "callback_complexity"],
+        "use_cases": ["api_servers", "real_time_applications", "rapid_development"]
+      },
+      "python": {
+        "pros": ["readable_code", "rich_libraries", "data_science_integration"],
+        "cons": ["performance_limitations", "gil_constraint"],
+        "use_cases": ["data_processing", "machine_learning", "rapid_prototyping"]
+      },
+      "java": {
+        "pros": ["enterprise_ready", "strong_typing", "mature_ecosystem"],
+        "cons": ["verbose_syntax", "slower_development"],
+        "use_cases": ["enterprise_applications", "high_performance_systems"]
+      }
+    },
+    "databases": {
+      "postgresql": {
+        "pros": ["acid_compliance", "extensibility", "json_support"],
+        "cons": ["complexity", "resource_intensive"],
+        "use_cases": ["complex_queries", "data_integrity", "geospatial_data"]
+      },
+      "mongodb": {
+        "pros": ["schema_flexibility", "horizontal_scaling", "json_native"],
+        "cons": ["eventual_consistency", "memory_usage"],
+        "use_cases": ["content_management", "real_time_analytics", "rapid_iteration"]
+      },
+      "redis": {
+        "pros": ["in_memory_speed", "data_structures", "pub_sub"],
+        "cons": ["memory_limitation", "persistence_complexity"],
+        "use_cases": ["caching", "session_storage", "real_time_features"]
+      }
+    }
+  },
+  "implementation_phases": {
+    "phase1_foundation": {
+      "duration": "20-30% of total timeline",
+      "objectives": ["development_environment", "basic_authentication", "core_data_models", "ci_cd_setup"],
+      "deliverables": ["working_development_environment", "basic_user_management", "database_schema", "deployment_pipeline"]
+    },
+    "phase2_core_features": {
+      "duration": "40-50% of total timeline", 
+      "objectives": ["business_logic_implementation", "api_development", "frontend_integration", "basic_testing"],
+      "deliverables": ["core_features", "api_endpoints", "user_interface", "test_coverage"]
+    },
+    "phase3_optimization": {
+      "duration": "20-30% of total timeline",
+      "objectives": ["performance_optimization", "security_hardening", "monitoring_setup", "documentation"],
+      "deliverables": ["optimized_performance", "security_audit", "monitoring_dashboard", "technical_documentation"]
+    }
+  },
+  "tools": {
+    "filesystem": true,
+    "text_editor": true,
+    "code_analysis": true,
+    "web_search": true,
+    "github": true,
+    "project_management": true
+  },
+  "risk_categories": {
+    "technical_risks": [
+      "technology_obsolescence",
+      "scalability_bottlenecks", 
+      "integration_complexity",
+      "performance_degradation"
+    ],
+    "operational_risks": [
+      "team_skill_gaps",
+      "timeline_pressure",
+      "budget_constraints",
+      "requirement_changes"
+    ],
+    "business_risks": [
+      "market_timing",
+      "competitor_analysis",
+      "user_adoption",
+      "regulatory_compliance"
+    ]
+  },
+  "output_format": {
+    "sections": [
+      "현재 상황 분석",
+      "추천 아키텍처 패턴",
+      "기술 스택 추천",
+      "시스템 아키텍처",
+      "단계별 구현 로드맵",
+      "주요 위험 요소 및 대응 방안",
+      "권장 사항"
+    ],
+    "include_diagrams": true,
+    "include_alternatives": true,
+    "include_rationale": true
+  },
+  "settings": {
+    "language": "ko",
+    "target_audience": "mixed_technical_background",
+    "explanation_level": "detailed_with_examples",
+    "include_trade_offs": true,
+    "provide_alternatives": true,
+    "consider_constraints": true
+  }
+}

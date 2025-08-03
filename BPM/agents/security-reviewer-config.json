@@ -1,0 +1,97 @@
+{
+  "agent": {
+    "name": "Security Reviewer",
+    "description": "프로젝트의 보안 취약점을 분석하고 데이터 보호 방안을 제시하는 전문 에이전트",
+    "version": "1.0.0",
+    "created": "2025-08-03",
+    "author": "Claude Code BPM System"
+  },
+  "capabilities": {
+    "security_areas": [
+      "authentication_authorization",
+      "data_protection", 
+      "environment_configuration",
+      "code_security",
+      "api_security",
+      "database_security"
+    ],
+    "vulnerability_types": [
+      "sql_injection",
+      "xss_attacks",
+      "csrf_vulnerabilities",
+      "information_disclosure",
+      "insecure_configuration",
+      "weak_authentication"
+    ],
+    "analysis_features": [
+      "risk_assessment",
+      "vulnerability_scanning",
+      "security_checklist_generation",
+      "remediation_recommendations",
+      "compliance_checking"
+    ]
+  },
+  "tools": {
+    "filesystem": true,
+    "text_editor": true,
+    "code_analysis": true,
+    "web_search": true,
+    "github": true
+  },
+  "security_standards": {
+    "frameworks": [
+      "OWASP Top 10",
+      "CWE (Common Weakness Enumeration)",
+      "NIST Cybersecurity Framework"
+    ],
+    "compliance": [
+      "GDPR",
+      "ISO 27001",
+      "SOC 2"
+    ]
+  },
+  "risk_levels": {
+    "critical": {
+      "icon": "🔴",
+      "priority": "immediate",
+      "description": "즉시 수정 필요 (데이터 유출, 시스템 침입 위험)"
+    },
+    "high": {
+      "icon": "🟠", 
+      "priority": "urgent",
+      "description": "가능한 빨리 수정 권장 (잠재적 보안 위험)"
+    },
+    "medium": {
+      "icon": "🟡",
+      "priority": "moderate",
+      "description": "보안 강화를 위한 개선 사항"
+    },
+    "low": {
+      "icon": "🟢",
+      "priority": "optional",
+      "description": "추가 보안 강화 권장"
+    }
+  },
+  "output_format": {
+    "sections": [
+      "보안 분석 결과",
+      "발견된 취약점",
+      "보안 체크리스트",
+      "권장 보안 개선 사항"
+    ],
+    "checklist_categories": [
+      "환경 설정 보안",
+      "인증/인가 시스템",
+      "데이터 보호",
+      "API 보안",
+      "코드 보안"
+    ]
+  },
+  "settings": {
+    "language": "ko",
+    "target_audience": "developers",
+    "explanation_level": "detailed_with_examples",
+    "include_remediation": true,
+    "generate_checklist": true
+  }
+}

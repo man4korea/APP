@@ -1,0 +1,1152 @@
+# 📁 C:\xampp\htdocs\BPM\api\openapi.yaml
+# Create at 2508031149 Ver1.00
+
+openapi: 3.0.3
+info:
+  title: BPM Total Business Process Management API
+  description: |
+    ## Total Business Process Management SaaS API
+    
+    10개 모듈을 통한 종합적인 업무 프로세스 관리 시스템
+    
+    ### 핵심 특징
+    - **멀티테넌트 아키텍처**: 회사별 완전 데이터 분리
+    - **JWT 기반 인증**: 확장 가능한 토큰 기반 인증
+    - **모듈별 색상 테마**: 무지개 색상 기반 UX
+    - **RESTful API**: 표준 REST API 설계
+    
+    ### 모듈별 색상 테마
+    - 🔴 조직관리: #ff6b6b
+    - 🟠 구성원관리: #ff9f43
+    - 🟡 Task관리: #feca57
+    - 🟢 문서관리: #55a3ff
+    - 🔵 Process Map관리: #3742fa
+    - 🟣 업무Flow관리: #a55eea
+    
+    ### 인증 방법
+    JWT Bearer 토큰을 Authorization 헤더에 포함:
+    ```
+    Authorization: Bearer <your-jwt-token>
+    ```
+    
+  version: 1.0.0
+  contact:
+    name: BPM API Support
+    url: https://api.bpm.example.com/support
+    email: api@bpm.example.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.bpm.example.com/v1
+    description: Production Server
+  - url: https://staging-api.bpm.example.com/v1
+    description: Staging Server
+  - url: http://localhost/BPM/api/v1
+    description: Local Development Server
+
+# 보안 스키마 정의
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT Bearer 토큰 인증
+    
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API 키 기반 인증 (서버간 통신용)
+      
+  # 공통 스키마 정의
+  schemas:
+    # 기본 응답 스키마
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 요청 성공 여부
+        message:
+          type: string
+          description: 응답 메시지
+        data:
+          type: object
+          description: 실제 데이터
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: 오류 목록
+        meta:
+          $ref: '#/components/schemas/MetaData'
+          
+    # 오류 스키마
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 오류 코드
+        message:
+          type: string
+          description: 오류 메시지
+        field:
+          type: string
+          description: 오류 발생 필드 (유효성 검사 오류시)
+          
+    # 메타데이터 스키마  
+    MetaData:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: 전체 레코드 수
+        page:
+          type: integer
+          description: 현재 페이지
+        per_page:
+          type: integer
+          description: 페이지당 레코드 수
+        last_page:
+          type: integer
+          description: 마지막 페이지
+          
+    # 사용자 스키마
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 사용자 고유 ID
+        email:
+          type: string
+          format: email
+          description: 이메일 주소
+        name:
+          type: string
+          description: 사용자 이름
+        avatar:
+          type: string
+          format: uri
+          description: 프로필 이미지 URL
+        status:
+          type: string
+          enum: [active, inactive, suspended]
+          description: 사용자 상태
+        created_at:
+          type: string
+          format: date-time
+          description: 생성일시
+        updated_at:
+          type: string
+          format: date-time
+          description: 수정일시
+          
+    # 회사 스키마
+    Company:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 회사 고유 ID
+        name:
+          type: string
+          description: 회사명
+        domain:
+          type: string
+          description: 회사 도메인
+        logo:
+          type: string
+          format: uri
+          description: 회사 로고 URL
+        settings:
+          type: object
+          description: 회사별 설정
+        subscription_plan:
+          type: string
+          enum: [free, pro, enterprise]
+          description: 구독 플랜
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          
+    # 부서 스키마
+    Department:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          description: 부서명
+        parent_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: 상위 부서 ID
+        manager_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: 부서장 ID
+        level:
+          type: integer
+          description: 부서 계층 레벨
+        sort_order:
+          type: integer
+          description: 정렬 순서
+        status:
+          type: string
+          enum: [active, inactive]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          
+    # Task 스키마
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          description: Task 제목
+        description:
+          type: string
+          description: Task 설명
+        category:
+          type: string
+          enum: [DB, CM, DM]
+          description: Task 카테고리
+        type:
+          type: string
+          description: Task 타입
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          description: 우선순위
+        status:
+          type: string
+          enum: [pending, in_progress, completed, cancelled]
+          description: 진행 상태
+        assigned_to:
+          type: string
+          format: uuid
+          nullable: true
+          description: 담당자 ID
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: 마감일
+        estimated_hours:
+          type: number
+          format: float
+          description: 예상 소요시간
+        actual_hours:
+          type: number
+          format: float
+          description: 실제 소요시간
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          
+    # 문서 스키마
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          description: 문서 제목
+        description:
+          type: string
+          description: 문서 설명
+        category:
+          type: string
+          description: 문서 카테고리
+        file_path:
+          type: string
+          description: 파일 경로
+        file_size:
+          type: integer
+          description: 파일 크기 (바이트)
+        mime_type:
+          type: string
+          description: MIME 타입
+        version:
+          type: string
+          description: 문서 버전
+        status:
+          type: string
+          enum: [draft, published, archived]
+          description: 문서 상태
+        tags:
+          type: array
+          items:
+            type: string
+          description: 문서 태그
+        created_by:
+          type: string
+          format: uuid
+          description: 작성자 ID
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+# 전역 보안 적용
+security:
+  - BearerAuth: []
+
+# API 경로 정의
+paths:
+  # 인증 API
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: 사용자 로그인
+      description: 이메일과 비밀번호로 로그인하여 JWT 토큰을 받습니다.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "password123"
+                remember_me:
+                  type: boolean
+                  description: 로그인 상태 유지 여부
+                  example: false
+      responses:
+        '200':
+          description: 로그인 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          token:
+                            type: string
+                            description: JWT 액세스 토큰
+                          refresh_token:
+                            type: string
+                            description: 리프레시 토큰
+                          expires_in:
+                            type: integer
+                            description: 토큰 만료 시간 (초)
+                          user:
+                            $ref: '#/components/schemas/User'
+        '401':
+          description: 인증 실패
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                success: false
+                message: "이메일 또는 비밀번호가 올바르지 않습니다."
+                
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: 사용자 로그아웃
+      description: 현재 JWT 토큰을 무효화합니다.
+      responses:
+        '200':
+          description: 로그아웃 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 인증되지 않은 요청
+          
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: 토큰 갱신
+      description: 리프레시 토큰으로 새로운 액세스 토큰을 발급받습니다.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refresh_token
+              properties:
+                refresh_token:
+                  type: string
+                  description: 리프레시 토큰
+      responses:
+        '200':
+          description: 토큰 갱신 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          token:
+                            type: string
+                          expires_in:
+                            type: integer
+
+  # 사용자 API
+  /users/me:
+    get:
+      tags:
+        - Users
+      summary: 현재 사용자 정보 조회
+      description: 로그인한 사용자의 정보를 조회합니다.
+      responses:
+        '200':
+          description: 사용자 정보 조회 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+                        
+  # 회사 API
+  /companies:
+    get:
+      tags:
+        - Companies
+      summary: 회사 목록 조회
+      description: 사용자가 속한 회사 목록을 조회합니다.
+      parameters:
+        - name: page
+          in: query
+          description: 페이지 번호
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: per_page
+          in: query
+          description: 페이지당 항목 수
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: 회사 목록 조회 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Company'
+                          
+    post:
+      tags:
+        - Companies
+      summary: 새 회사 생성
+      description: 새로운 회사를 생성합니다.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - domain
+              properties:
+                name:
+                  type: string
+                  example: "Example Company"
+                domain:
+                  type: string
+                  example: "example.com"
+                logo:
+                  type: string
+                  format: uri
+                  example: "https://example.com/logo.png"
+      responses:
+        '201':
+          description: 회사 생성 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Company'
+                        
+  /companies/{company_id}:
+    get:
+      tags:
+        - Companies
+      summary: 회사 상세 정보 조회
+      description: 특정 회사의 상세 정보를 조회합니다.
+      parameters:
+        - name: company_id
+          in: path
+          required: true
+          description: 회사 ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 회사 정보 조회 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Company'
+        '404':
+          description: 회사를 찾을 수 없음
+          
+  # 부서 API
+  /companies/{company_id}/departments:
+    get:
+      tags:
+        - Departments
+      summary: 부서 목록 조회
+      description: 회사의 부서 목록을 계층구조로 조회합니다.
+      parameters:
+        - name: company_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: parent_id
+          in: query
+          description: 상위 부서 ID (하위 부서만 조회시)
+          schema:
+            type: string
+            format: uuid
+        - name: level
+          in: query
+          description: 부서 계층 레벨
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: 부서 목록 조회 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Department'
+                          
+    post:
+      tags:
+        - Departments
+      summary: 새 부서 생성
+      description: 새로운 부서를 생성합니다.
+      parameters:
+        - name: company_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: "개발팀"
+                parent_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                  description: "상위 부서 ID"
+                manager_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                  description: "부서장 ID"
+      responses:
+        '201':
+          description: 부서 생성 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Department'
+
+  # Task API  
+  /companies/{company_id}/tasks:
+    get:
+      tags:
+        - Tasks
+      summary: Task 목록 조회
+      description: 회사의 Task 목록을 조회합니다.
+      parameters:
+        - name: company_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          description: Task 상태 필터
+          schema:
+            type: string
+            enum: [pending, in_progress, completed, cancelled]
+        - name: priority
+          in: query
+          description: 우선순위 필터
+          schema:
+            type: string
+            enum: [low, medium, high, urgent]
+        - name: assigned_to
+          in: query
+          description: 담당자 ID 필터
+          schema:
+            type: string
+            format: uuid
+        - name: category
+          in: query
+          description: 카테고리 필터
+          schema:
+            type: string
+            enum: [DB, CM, DM]
+        - name: due_date_from
+          in: query
+          description: 마감일 시작 범위
+          schema:
+            type: string
+            format: date
+        - name: due_date_to
+          in: query
+          description: 마감일 끝 범위
+          schema:
+            type: string
+            format: date
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: sort_by
+          in: query
+          description: 정렬 기준
+          schema:
+            type: string
+            enum: [created_at, due_date, priority, status]
+            default: created_at
+        - name: sort_order
+          in: query
+          description: 정렬 순서
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        '200':
+          description: Task 목록 조회 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Task'
+
+    post:
+      tags:
+        - Tasks
+      summary: 새 Task 생성
+      description: 새로운 Task를 생성합니다.
+      parameters:
+        - name: company_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - category
+                - priority
+              properties:
+                title:
+                  type: string
+                  example: "고객 데이터 마이그레이션"
+                description:
+                  type: string
+                  example: "기존 시스템에서 신규 시스템으로 고객 데이터를 이전합니다."
+                category:
+                  type: string
+                  enum: [DB, CM, DM]
+                  example: "DM"
+                type:
+                  type: string
+                  example: "migration"
+                priority:
+                  type: string
+                  enum: [low, medium, high, urgent]
+                  example: "high"
+                assigned_to:
+                  type: string
+                  format: uuid
+                  nullable: true
+                due_date:
+                  type: string
+                  format: date-time
+                  nullable: true
+                estimated_hours:
+                  type: number
+                  format: float
+                  example: 8.0
+      responses:
+        '201':
+          description: Task 생성 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Task'
+
+  /companies/{company_id}/tasks/{task_id}:
+    get:
+      tags:
+        - Tasks
+      summary: Task 상세 정보 조회
+      description: 특정 Task의 상세 정보를 조회합니다.
+      parameters:
+        - name: company_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Task 정보 조회 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Task'
+        '404':
+          description: Task를 찾을 수 없음
+          
+    put:
+      tags:
+        - Tasks
+      summary: Task 정보 수정
+      description: Task 정보를 수정합니다.
+      parameters:
+        - name: company_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                priority:
+                  type: string
+                  enum: [low, medium, high, urgent]
+                status:
+                  type: string
+                  enum: [pending, in_progress, completed, cancelled]
+                assigned_to:
+                  type: string
+                  format: uuid
+                  nullable: true
+                due_date:
+                  type: string
+                  format: date-time
+                  nullable: true
+                estimated_hours:
+                  type: number
+                  format: float
+                actual_hours:
+                  type: number
+                  format: float
+      responses:
+        '200':
+          description: Task 수정 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Task'
+        '404':
+          description: Task를 찾을 수 없음
+          
+    delete:
+      tags:
+        - Tasks
+      summary: Task 삭제
+      description: Task를 삭제합니다.
+      parameters:
+        - name: company_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Task 삭제 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Task를 찾을 수 없음
+
+  # 문서 API
+  /companies/{company_id}/documents:
+    get:
+      tags:
+        - Documents
+      summary: 문서 목록 조회
+      description: 회사의 문서 목록을 조회합니다.
+      parameters:
+        - name: company_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: category
+          in: query
+          description: 문서 카테고리 필터
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: 문서 상태 필터
+          schema:
+            type: string
+            enum: [draft, published, archived]
+        - name: search
+          in: query
+          description: 문서 제목/내용 검색
+          schema:
+            type: string
+        - name: tags
+          in: query
+          description: 태그 필터 (쉼표로 구분)
+          schema:
+            type: string
+            example: "api,documentation,guide"
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: 문서 목록 조회 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Document'
+
+    post:
+      tags:
+        - Documents
+      summary: 새 문서 업로드
+      description: 새로운 문서를 업로드합니다.
+      parameters:
+        - name: company_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - title
+                - category
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: 업로드할 파일
+                title:
+                  type: string
+                  example: "API 개발 가이드"
+                description:
+                  type: string
+                  example: "RESTful API 개발을 위한 가이드라인"
+                category:
+                  type: string
+                  example: "documentation"
+                tags:
+                  type: string
+                  example: "api,development,guide"
+                  description: "태그 (쉼표로 구분)"
+      responses:
+        '201':
+          description: 문서 업로드 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Document'
+
+  # 통계 API
+  /companies/{company_id}/analytics/dashboard:
+    get:
+      tags:
+        - Analytics
+      summary: 대시보드 통계 조회
+      description: 회사의 주요 통계 정보를 조회합니다.
+      parameters:
+        - name: company_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: period
+          in: query
+          description: 통계 기간
+          schema:
+            type: string
+            enum: [day, week, month, quarter, year]
+            default: month
+        - name: start_date
+          in: query
+          description: 시작 날짜
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          description: 종료 날짜
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: 통계 조회 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          summary:
+                            type: object
+                            properties:
+                              total_users:
+                                type: integer
+                              total_tasks:
+                                type: integer
+                              completed_tasks:
+                                type: integer
+                              total_documents:
+                                type: integer
+                          task_stats:
+                            type: object
+                            properties:
+                              by_status:
+                                type: object
+                              by_priority:
+                                type: object
+                              by_category:
+                                type: object
+                          user_activity:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                date:
+                                  type: string
+                                  format: date
+                                active_users:
+                                  type: integer
+
+# 태그 정의
+tags:
+  - name: Authentication
+    description: 사용자 인증 관련 API
+  - name: Users
+    description: 사용자 관리 API
+  - name: Companies
+    description: 회사 관리 API
+  - name: Departments
+    description: 부서 관리 API (조직관리 모듈)
+  - name: Tasks
+    description: Task 관리 API (Task관리 모듈)
+  - name: Documents
+    description: 문서 관리 API (문서관리 모듈)
+  - name: Analytics
+    description: 통계 및 분석 API
+
+# 외부 문서 링크
+externalDocs:
+  description: BPM API 개발자 가이드
+  url: https://docs.bpm.example.com

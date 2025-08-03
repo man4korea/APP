@@ -164,11 +164,90 @@ shrimp-task-manager:execute_task [작업ID]
 3. **작업 관리**: SHRIMP_Tasks.md 마스터 파일 기준
 4. **SHRIMP 연동**: 세부 작업 추적 및 보조 관리
 5. **보안**: .env 파일로 중요 정보 분리
+6. **AI 도구**: SuperClaude 자동화 시스템 활용
 
 ### 작업 절차
 ```
-지침서 로딩 → SHRIMP_Tasks.md 확인 → 작업 선택 → 개발 → 테스트 → Git → 배포 → SHRIMP_Tasks.md 업데이트 → 완료
+지침서 로딩 → SHRIMP_Tasks.md 확인 → 전문 에이전트 호출 → 작업 선택 → 개발 → 테스트 → Git → 배포 → SHRIMP_Tasks.md 업데이트 → SuperClaude 자동화 → 완료
 ```
+
+## 🔮 SuperClaude 자동화 시스템 (Ver 3.11 신규)
+
+### 📋 자동화 트리거 조건
+
+**Claude Code는 다음 상황에서 자동으로 SuperClaude 명령을 실행해야 함:**
+
+#### 🔄 **지속적 자동화 (매번 실행)**
+```bash
+# Git 커밋 시마다 자동 실행
+superclaude commit -i
+
+# 조건: git add 후 커밋 전
+# 목적: AI 기반 커밋 메시지 생성 및 확인
+```
+
+#### 📊 **주기적 자동화 (조건부 실행)**
+```bash
+# 주간 작업 정리시 자동 실행
+superclaude review
+superclaude changelog
+
+# 조건: SHRIMP 작업 완료가 5개 이상 누적되었을 때
+# 목적: 코드 품질 관리 및 진행상황 정리
+```
+
+#### 📖 **마일스톤 자동화 (프로젝트 완료시)**
+```bash
+# 프로젝트 완료 후 자동 실행
+superclaude readme
+superclaude docs
+superclaude annotate
+
+# 조건: SHRIMP_Tasks.md에서 전체 작업 진행률이 90% 이상일 때
+# 목적: 최종 문서화 및 히스토리 정리
+```
+
+### 🎯 **Claude Code 자동 판단 기준**
+
+#### **1. 커밋 자동화 판단**
+- `git add` 명령 실행 감지시
+- `git commit` 직전에 자동으로 `superclaude commit -i` 실행
+- 사용자 확인 후 진행
+
+#### **2. 리뷰 자동화 판단**
+- SHRIMP 완료 작업이 3개 이상 누적시
+- 새로운 모듈 개발 시작시
+- 사용자가 "리뷰" 또는 "검토" 키워드 언급시
+
+#### **3. 문서화 자동화 판단**
+- `SHRIMP_Tasks.md`에서 전체 진행률 90% 이상
+- 사용자가 "프로젝트 마무리" 언급시
+- 모든 핵심 모듈 개발 완료시
+
+### ⚡ **자동화 실행 예시**
+
+```bash
+# 예시 1: 커밋 전 자동화
+user: git add .
+assistant: 변경사항이 감지되었습니다. SuperClaude로 AI 커밋 메시지를 생성하겠습니다.
+superclaude commit -i
+
+# 예시 2: 작업 완료 후 자동화  
+assistant: 3개 작업이 완료되었습니다. 코드 리뷰를 진행하겠습니다.
+superclaude review
+
+# 예시 3: 프로젝트 완료시 자동화
+assistant: 전체 작업 진행률이 92%입니다. 최종 문서화를 시작하겠습니다.
+superclaude readme
+superclaude docs
+```
+
+### 🚨 **자동화 안전장치**
+
+1. **사용자 확인**: 중요한 자동화는 사용자 승인 후 실행
+2. **백업 생성**: 자동화 전 현재 상태 백업
+3. **롤백 준비**: 문제 발생시 이전 상태로 복구 가능
+4. **로그 기록**: 모든 자동화 활동 기록 유지
 
 ---
 
@@ -391,6 +470,12 @@ alias bpm-deploy="npm run deploy"
 
 ## 🌟 버전 업데이트 로그
 
+### Ver 3.11 (2025-08-02)
+- 🔮 SuperClaude 자동화 시스템 추가
+- 🎯 상황별 자동화 트리거 조건 정의
+- 📊 Claude Code 자동 판단 기준 설정
+- 🚨 자동화 안전장치 및 백업 시스템 구축
+
 ### Ver 3.10 (2025-08-02)
 - 📋 SHRIMP_Tasks.md 마스터 작업 관리 시스템 추가
 - 🎯 작업 관리 이중 확인 시스템 구축
@@ -406,5 +491,5 @@ alias bpm-deploy="npm run deploy"
 
 ---
 
-*Last updated: 2025-08-02 20:30 JST*  
-*Version: 3.10 - SHRIMP_Tasks.md 마스터 작업 관리 시스템 완성*
+*Last updated: 2025-08-02 12:36 JST*  
+*Version: 3.11 - SuperClaude 자동화 시스템 통합 완성*

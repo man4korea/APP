@@ -1,0 +1,120 @@
+{
+  "// Comment": "📁 C:\xampp\htdocs\BPM\CLAUDE_CODE_SETUP_PACKAGE\config\claude_desktop_settings.json",
+  "// Comment": "Create at 2508031212 Ver1.00",
+  
+  "mcpServers": {
+    "shrimp-task-manager": {
+      "command": "npx",
+      "args": ["@shrimpai/shrimp-task-manager"],
+      "description": "SHRIMP 작업 관리 시스템 - BPM 프로젝트 핵심 도구",
+      "enabled": true
+    },
+    
+    "filesystem": {
+      "command": "npx", 
+      "args": ["@modelcontextprotocol/server-filesystem", "C:\\xampp\\htdocs\\BPM"],
+      "description": "파일 시스템 접근 - BPM 프로젝트 파일 관리",
+      "enabled": true
+    },
+    
+    "text-editor": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-text-editor"],
+      "description": "텍스트 편집기 - 파일 편집 및 수정",
+      "enabled": true
+    },
+    
+    "memory": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-memory"],
+      "description": "지식 그래프 메모리 - 프로젝트 정보 저장",
+      "enabled": true
+    },
+    
+    "github": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_TOKEN": ""
+      },
+      "description": "GitHub 연동 - 소스 코드 관리",
+      "enabled": true
+    },
+    
+    "sequential-thinking": {
+      "command": "npx", 
+      "args": ["@modelcontextprotocol/server-sequential-thinking"],
+      "description": "순차적 사고 - 복잡한 문제 해결",
+      "enabled": true
+    },
+    
+    "terminal": {
+      "command": "npx",
+      "args": ["@weidwonder/terminal-mcp-server"],
+      "description": "터미널 접근 - 시스템 명령 실행",
+      "enabled": true
+    },
+    
+    "playwright": {
+      "command": "npx",
+      "args": ["@agentic/mcp-playwright"],
+      "description": "Playwright 웹 테스트 - 자동화된 웹 테스트",
+      "enabled": true
+    },
+    
+    "puppeteer": {
+      "command": "npx", 
+      "args": ["@modelcontextprotocol/server-puppeteer"],
+      "description": "Puppeteer 웹 제어 - 브라우저 자동화",
+      "enabled": true
+    },
+    
+    "ide": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-ide"],
+      "description": "IDE 통합 - 개발 환경 연동",
+      "enabled": true
+    }
+  },
+  
+  "appearance": {
+    "theme": "system",
+    "fontSize": 14,
+    "fontFamily": "system-ui"
+  },
+  
+  "behavior": {
+    "autoSave": true,
+    "confirmOnExit": true,
+    "enableNotifications": true
+  },
+  
+  "developer": {
+    "enableDevTools": false,
+    "debugMode": false,
+    "logLevel": "info"
+  },
+  
+  "privacy": {
+    "allowAnalytics": false,
+    "shareUsageData": false
+  },
+  
+  "experimental": {
+    "enableBetaFeatures": false
+  },
+  
+  "// Installation Notes": [
+    "이 설정 파일을 다음 위치에 복사하세요:",
+    "Windows: %APPDATA%\\Claude\\settings.json",
+    "또는: %APPDATA%\\Claude\\claude_desktop_config.json",
+    "",
+    "주의사항:",
+    "1. GITHUB_TOKEN 환경 변수를 실제 토큰으로 설정하세요",
+    "2. 파일 경로는 실제 시스템에 맞게 조정하세요", 
+    "3. 필요하지 않은 서버는 enabled: false로 설정하세요",
+    "",
+    "사용법:",
+    "Claude Desktop 재시작 후 Claude Code에서 MCP 도구들을 사용할 수 있습니다"
+  ]
+}
