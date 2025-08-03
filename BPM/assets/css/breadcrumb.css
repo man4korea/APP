@@ -1,0 +1,558 @@
+/* 📁 C:\xampp\htdocs\BPM\assets\css\breadcrumb.css */
+/* Create at 2508031625 Ver1.00 */
+
+/**
+ * BPM 브레드크럼 네비게이션 스타일
+ * 현재 위치를 시각적으로 표시하는 브레드크럼 시스템
+ * 모듈: 브레드크럼 네비게이션 (색상: 동적 모듈별)
+ */
+
+/* ========================================
+   CSS 변수 정의
+   ======================================== */
+
+:root {
+  --breadcrumb-primary-color: #3742fa;
+  --breadcrumb-background: #ffffff;
+  --breadcrumb-border-color: #e2e8f0;
+  --breadcrumb-text-color: #64748b;
+  --breadcrumb-text-active: #1e293b;
+  --breadcrumb-hover-bg: #f8fafc;
+  --breadcrumb-separator-color: #cbd5e1;
+  --breadcrumb-height: 48px;
+  --breadcrumb-padding: 16px 24px;
+  --breadcrumb-border-radius: 8px;
+  --breadcrumb-font-size: 14px;
+  --breadcrumb-icon-size: 16px;
+  --breadcrumb-gap: 8px;
+}
+
+/* ========================================
+   브레드크럼 메인 컨테이너
+   ======================================== */
+
+.breadcrumb-nav {
+  position: sticky;
+  top: var(--header-height);
+  z-index: var(--z-sticky-low);
+  background: var(--breadcrumb-background);
+  border-bottom: 1px solid var(--breadcrumb-border-color);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  transition: all var(--transition-normal);
+}
+
+.breadcrumb-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--breadcrumb-height);
+  padding: var(--breadcrumb-padding);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* 메인 콘텐츠와의 간격 조정 */
+.breadcrumb-nav + .page-content {
+  padding-top: 0;
+}
+
+/* ========================================
+   브레드크럼 리스트
+   ======================================== */
+
+.breadcrumb-list {
+  display: flex;
+  align-items: center;
+  gap: var(--breadcrumb-gap);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: var(--breadcrumb-gap);
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.breadcrumb-item:not(:last-child) {
+  flex-shrink: 1;
+}
+
+/* ========================================
+   브레드크럼 링크 스타일
+   ======================================== */
+
+.breadcrumb-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: var(--border-radius-sm);
+  text-decoration: none;
+  color: var(--breadcrumb-text-color);
+  font-size: var(--breadcrumb-font-size);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-fast);
+  min-width: 0;
+  white-space: nowrap;
+  position: relative;
+}
+
+.breadcrumb-link:hover {
+  background: var(--breadcrumb-hover-bg);
+  color: var(--breadcrumb-primary-color);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.breadcrumb-link:focus {
+  outline: 2px solid var(--breadcrumb-primary-color);
+  outline-offset: 2px;
+}
+
+/* 현재 페이지 (비활성 링크) */
+.breadcrumb-current {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  color: var(--breadcrumb-text-active);
+  font-size: var(--breadcrumb-font-size);
+  font-weight: var(--font-weight-semibold);
+  min-width: 0;
+  white-space: nowrap;
+}
+
+/* ========================================
+   브레드크럼 아이콘
+   ======================================== */
+
+.breadcrumb-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--breadcrumb-icon-size);
+  height: var(--breadcrumb-icon-size);
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.breadcrumb-link .breadcrumb-icon {
+  opacity: 0.7;
+}
+
+.breadcrumb-link:hover .breadcrumb-icon,
+.breadcrumb-current .breadcrumb-icon {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* ========================================
+   브레드크럼 텍스트
+   ======================================== */
+
+.breadcrumb-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+/* ========================================
+   구분자 스타일
+   ======================================== */
+
+.breadcrumb-separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--breadcrumb-separator-color);
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
+.breadcrumb-item:hover + .breadcrumb-item .breadcrumb-separator {
+  opacity: 0.8;
+}
+
+/* ========================================
+   브레드크럼 액션 버튼
+   ======================================== */
+
+.breadcrumb-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 16px;
+  flex-shrink: 0;
+}
+
+.breadcrumb-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: var(--border-radius);
+  color: var(--breadcrumb-text-color);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.breadcrumb-action-btn:hover {
+  background: var(--breadcrumb-hover-bg);
+  color: var(--breadcrumb-primary-color);
+  transform: translateY(-1px);
+}
+
+.breadcrumb-action-btn:active {
+  transform: translateY(0);
+}
+
+.breadcrumb-action-btn:focus {
+  outline: 2px solid var(--breadcrumb-primary-color);
+  outline-offset: 2px;
+}
+
+/* 즐겨찾기 활성 상태 */
+.breadcrumb-action-btn.active {
+  color: #fbbf24;
+  background: #fef3c7;
+}
+
+/* ========================================
+   모듈별 색상 테마
+   ======================================== */
+
+/* 대시보드 - 파랑 */
+.breadcrumb-nav[data-module="dashboard"] {
+  --breadcrumb-primary-color: #3742fa;
+}
+
+/* 조직관리 - 빨강 */
+.breadcrumb-nav[data-module="organization"] {
+  --breadcrumb-primary-color: #ff6b6b;
+}
+
+/* 구성원관리 - 주황 */
+.breadcrumb-nav[data-module="members"] {
+  --breadcrumb-primary-color: #ff9f43;
+}
+
+/* 업무관리 - 노랑 */
+.breadcrumb-nav[data-module="workflow"] {
+  --breadcrumb-primary-color: #feca57;
+}
+
+/* 운영관리 - 연한파랑 */
+.breadcrumb-nav[data-module="management"] {
+  --breadcrumb-primary-color: #55a3ff;
+}
+
+/* 모듈별 호버 효과 */
+.breadcrumb-nav[data-module="dashboard"] .breadcrumb-link:hover {
+  background: rgba(55, 66, 250, 0.1);
+}
+
+.breadcrumb-nav[data-module="organization"] .breadcrumb-link:hover {
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.breadcrumb-nav[data-module="members"] .breadcrumb-link:hover {
+  background: rgba(255, 159, 67, 0.1);
+}
+
+.breadcrumb-nav[data-module="workflow"] .breadcrumb-link:hover {
+  background: rgba(254, 202, 87, 0.1);
+}
+
+.breadcrumb-nav[data-module="management"] .breadcrumb-link:hover {
+  background: rgba(85, 163, 255, 0.1);
+}
+
+/* ========================================
+   반응형 디자인
+   ======================================== */
+
+/* 태블릿 (768px ~ 1023px) */
+@media (max-width: 1023px) {
+  .breadcrumb-container {
+    padding: 12px 20px;
+  }
+  
+  .breadcrumb-actions {
+    margin-left: 12px;
+  }
+  
+  /* 텍스트 축약 */
+  .breadcrumb-text {
+    max-width: 120px;
+  }
+}
+
+/* 모바일 (767px 이하) */
+@media (max-width: 767px) {
+  :root {
+    --breadcrumb-height: 44px;
+    --breadcrumb-padding: 8px 16px;
+    --breadcrumb-font-size: 13px;
+    --breadcrumb-icon-size: 14px;
+    --breadcrumb-gap: 6px;
+  }
+  
+  .breadcrumb-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    min-height: auto;
+  }
+  
+  .breadcrumb-list {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .breadcrumb-list::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .breadcrumb-actions {
+    align-self: flex-end;
+    margin-left: 0;
+  }
+  
+  /* 모바일에서 텍스트 더 축약 */
+  .breadcrumb-text {
+    max-width: 80px;
+  }
+  
+  /* 첫 번째와 마지막 아이템만 보이도록 */
+  .breadcrumb-item:not(:first-child):not(:last-child) {
+    display: none;
+  }
+  
+  /* 생략 표시 추가 */
+  .breadcrumb-item:first-child:not(:last-child)::after {
+    content: '...';
+    color: var(--breadcrumb-separator-color);
+    margin-left: var(--breadcrumb-gap);
+    font-weight: bold;
+  }
+}
+
+/* 초소형 모바일 (480px 이하) */
+@media (max-width: 480px) {
+  .breadcrumb-container {
+    padding: 6px 12px;
+  }
+  
+  .breadcrumb-text {
+    max-width: 60px;
+  }
+  
+  .breadcrumb-actions {
+    gap: 4px;
+  }
+  
+  .breadcrumb-action-btn {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* ========================================
+   다크 모드 지원
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --breadcrumb-background: #1e293b;
+    --breadcrumb-border-color: #334155;
+    --breadcrumb-text-color: #94a3b8;
+    --breadcrumb-text-active: #f1f5f9;
+    --breadcrumb-hover-bg: #334155;
+    --breadcrumb-separator-color: #64748b;
+  }
+  
+  .breadcrumb-nav {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  }
+  
+  .breadcrumb-link:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* ========================================
+   접근성 향상
+   ======================================== */
+
+/* 포커스 표시 개선 */
+.breadcrumb-link:focus-visible,
+.breadcrumb-action-btn:focus-visible {
+  outline: 2px solid var(--breadcrumb-primary-color);
+  outline-offset: 2px;
+  border-radius: var(--border-radius-sm);
+}
+
+/* 고대비 모드 */
+@media (prefers-contrast: high) {
+  .breadcrumb-nav {
+    border-bottom-width: 2px;
+  }
+  
+  .breadcrumb-link,
+  .breadcrumb-current {
+    border: 1px solid transparent;
+  }
+  
+  .breadcrumb-link:hover,
+  .breadcrumb-link:focus {
+    border-color: currentColor;
+  }
+  
+  .breadcrumb-separator {
+    opacity: 1;
+  }
+}
+
+/* 모션 감소 설정 */
+@media (prefers-reduced-motion: reduce) {
+  .breadcrumb-link,
+  .breadcrumb-icon,
+  .breadcrumb-text,
+  .breadcrumb-separator,
+  .breadcrumb-action-btn,
+  .breadcrumb-nav {
+    transition: none;
+  }
+  
+  .breadcrumb-link:hover .breadcrumb-icon {
+    transform: none;
+  }
+  
+  .breadcrumb-link:hover,
+  .breadcrumb-action-btn:hover {
+    transform: none;
+  }
+}
+
+/* ========================================
+   인쇄 스타일
+   ======================================== */
+
+@media print {
+  .breadcrumb-nav {
+    position: static;
+    box-shadow: none;
+    border-bottom: 1px solid #000;
+    background: white;
+    color: black;
+  }
+  
+  .breadcrumb-actions {
+    display: none;
+  }
+  
+  .breadcrumb-link,
+  .breadcrumb-current {
+    color: black;
+  }
+  
+  .breadcrumb-separator {
+    color: black;
+  }
+}
+
+/* ========================================
+   애니메이션 및 효과
+   ======================================== */
+
+/* 브레드크럼 등장 애니메이션 */
+@keyframes breadcrumbFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.breadcrumb-nav {
+  animation: breadcrumbFadeIn 0.3s ease-out;
+}
+
+/* 브레드크럼 항목 순차 등장 */
+.breadcrumb-item {
+  animation: breadcrumbItemFadeIn 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+.breadcrumb-item:nth-child(1) { animation-delay: 0.1s; }
+.breadcrumb-item:nth-child(2) { animation-delay: 0.2s; }
+.breadcrumb-item:nth-child(3) { animation-delay: 0.3s; }
+.breadcrumb-item:nth-child(4) { animation-delay: 0.4s; }
+.breadcrumb-item:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes breadcrumbItemFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 호버 시 연쇄 효과 */
+.breadcrumb-item:hover ~ .breadcrumb-item .breadcrumb-separator {
+  opacity: 0.3;
+  transition-delay: 0.1s;
+}
+
+/* ========================================
+   유틸리티 클래스
+   ======================================== */
+
+/* 브레드크럼 숨기기 */
+.breadcrumb-hidden {
+  display: none;
+}
+
+/* 컴팩트 모드 */
+.breadcrumb-compact {
+  --breadcrumb-height: 36px;
+  --breadcrumb-padding: 8px 16px;
+  --breadcrumb-font-size: 12px;
+}
+
+.breadcrumb-compact .breadcrumb-text {
+  max-width: 100px;
+}
+
+/* 최소 모드 (아이콘만) */
+.breadcrumb-minimal .breadcrumb-text {
+  display: none;
+}
+
+.breadcrumb-minimal .breadcrumb-link,
+.breadcrumb-minimal .breadcrumb-current {
+  padding: 8px;
+}

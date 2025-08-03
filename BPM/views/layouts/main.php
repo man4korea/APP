@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="<?= asset_path('css/variables.css') ?>">
     <link rel="stylesheet" href="<?= asset_path('css/header.css') ?>">
     <link rel="stylesheet" href="<?= asset_path('css/sidebar.css') ?>">
+    <link rel="stylesheet" href="<?= asset_path('css/breadcrumb.css') ?>">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="<?= asset_path('images/favicon.png') ?>">
@@ -53,9 +54,9 @@
         <!-- 메인 콘텐츠 영역 -->
         <main id="main-content" class="main-content">
             
-            <!-- 브레드크럼 영역 (추후 추가) -->
+            <!-- 브레드크럼 영역 -->
             <?php if (!isset($hideBreadcrumb) || !$hideBreadcrumb): ?>
-                <!-- breadcrumb 컴포넌트는 다음 작업에서 추가 -->
+                <?php include_once __DIR__ . '/../components/breadcrumb.php'; ?>
             <?php endif; ?>
             
             <!-- 페이지 콘텐츠 -->
