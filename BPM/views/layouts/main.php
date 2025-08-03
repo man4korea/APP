@@ -82,6 +82,7 @@
     
     <!-- 기본 JavaScript -->
     <script src="<?= asset_path('js/app.js') ?>"></script>
+    <script src="<?= asset_path('js/theme.js') ?>"></script>
     
     <!-- 추가 JavaScript -->
     <?php if (isset($scripts)): ?>
