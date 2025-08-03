@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="<?= asset_path('css/base.css') ?>">
     <link rel="stylesheet" href="<?= asset_path('css/variables.css') ?>">
     <link rel="stylesheet" href="<?= asset_path('css/header.css') ?>">
+    <link rel="stylesheet" href="<?= asset_path('css/sidebar.css') ?>">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="<?= asset_path('images/favicon.png') ?>">
@@ -44,9 +45,9 @@
             <?php include_once __DIR__ . '/../components/header.php'; ?>
         <?php endif; ?>
         
-        <!-- 사이드바 영역 (추후 추가) -->
+        <!-- 사이드바 영역 -->
         <?php if (!isset($hideSidebar) || !$hideSidebar): ?>
-            <!-- sidebar 컴포넌트는 다음 작업에서 추가 -->
+            <?php include_once __DIR__ . '/../components/sidebar.php'; ?>
         <?php endif; ?>
         
         <!-- 메인 콘텐츠 영역 -->
