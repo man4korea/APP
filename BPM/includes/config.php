@@ -78,6 +78,27 @@ define('LOG_CHANNEL', $_ENV['LOG_CHANNEL'] ?? 'file');
 define('LOG_LEVEL', $_ENV['LOG_LEVEL'] ?? 'debug');
 define('LOG_PATH', $_ENV['LOG_PATH'] ?? 'logs');
 
+// AI API 키 설정
+define('OPENAI_API_KEY', $_ENV['OPENAI_API_KEY'] ?? '');
+define('GOOGLE_API_KEY', $_ENV['GOOGLE_API_KEY'] ?? '');
+define('GEMINI_API_KEY', $_ENV['GEMINI_API_KEY'] ?? '');
+define('ANTHROPIC_API_KEY', $_ENV['ANTHROPIC_API_KEY'] ?? '');
+define('TAVILY_API_KEY', $_ENV['TAVILY_API_KEY'] ?? '');
+define('YOUTUBE_API_KEY', $_ENV['YOUTUBE_API_KEY'] ?? '');
+define('GROK_API_KEY', $_ENV['GROK_API_KEY'] ?? '');
+define('NOTION_API_KEY', $_ENV['NOTION_API_KEY'] ?? '');
+define('FIGMA_API_KEY', $_ENV['FIGMA_API_KEY'] ?? '');
+
+// GitHub 설정
+define('GITHUB_TOKEN', $_ENV['GITHUB_TOKEN'] ?? '');
+define('GITHUB_USERNAME', $_ENV['GITHUB_USERNAME'] ?? '');
+define('GITHUB_REPO', $_ENV['GITHUB_REPO'] ?? '');
+define('GIT_USER_NAME', $_ENV['GIT_USER_NAME'] ?? '');
+define('GIT_USER_EMAIL', $_ENV['GIT_USER_EMAIL'] ?? '');
+
+// HTTPS 지원 확인
+define('HTTPS_ENABLED', isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+
 // 타임존 설정
 date_default_timezone_set($_ENV['APP_TIMEZONE'] ?? 'Asia/Seoul');
 

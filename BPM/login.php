@@ -11,8 +11,20 @@
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/core/bootstrap.php';
 
+use BPM\Core\Auth;
+use BPM\Core\Security;
+
+// Auth 및 Security 인스턴스 생성
+$auth = Auth::getInstance();
+$security = Security::getInstance();
+
+// Remember Token으로 자동 로그인 시도
+if (!$auth->isLoggedIn()) {
+    $auth->attemptRememberLogin();
+}
+
 // 이미 로그인된 경우 대시보드로 리다이렉트
-if (is_logged_in()) {
+if ($auth->isLoggedIn()) {
     header('Location: ' . base_url('dashboard'));
     exit;
 }
@@ -26,31 +38,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $remember = isset($_POST['remember']);
     
-    // 기본 validation
-    if (empty($email) || empty($password)) {
-        $error = '이메일과 비밀번호를 입력해주세요.';
+    // CSRF 토큰 검증
+    $csrfToken = $_POST['_token'] ?? '';
+    if (!$security->verifyCSRFToken($csrfToken)) {
+        $error = '보안 토큰이 유효하지 않습니다. 페이지를 다시 새로고침해주세요.';
     } else {
-        // 임시 로그인 처리 (실제 인증은 추후 구현)
-        if ($email === 'admin@easycorp.com' && $password === 'admin123') {
-            // 세션 시작
-            session_start();
-            $_SESSION['user_id'] = 1;
-            $_SESSION['user_email'] = $email;
-            $_SESSION['user_name'] = 'EASYCORP 관리자';
-            $_SESSION['user_role'] = 'admin';
-            $_SESSION['company_id'] = 1;
-            
-            // Remember me 처리
-            if ($remember) {
-                $token = bin2hex(random_bytes(32));
-                setcookie('remember_token', $token, time() + (30 * 24 * 60 * 60), '/', '', false, true);
-                // 실제로는 DB에 토큰 저장 필요
-            }
-            
-            $success = '로그인에 성공했습니다. 잠시 후 대시보드로 이동합니다.';
+        // 실제 인증 처리
+        $result = $auth->login($email, $password, $remember);
+        
+        if ($result['success']) {
+            $success = $result['message'];
             header('refresh:2;url=' . base_url('dashboard'));
         } else {
-            $error = '이메일 또는 비밀번호가 올바르지 않습니다.';
+            $error = $result['message'];
         }
     }
 }
@@ -97,6 +97,9 @@ $content = '
         
         <!-- 로그인 폼 -->
         <form method="POST" class="login-form" id="loginForm">
+            
+            <!-- CSRF 토큰 -->
+            <input type="hidden" name="_token" value="' . $security->generateCSRFToken() . '">
             
             <!-- 알림 메시지 -->
             ' . (!empty($error) ? '<div class="alert alert-error">' . htmlspecialchars($error) . '</div>' : '') . '
@@ -563,16 +566,79 @@ function togglePassword() {
     }
 }
 
-// 폼 제출 시 로딩 상태
+// 폼 제출 시 AJAX 처리
 document.getElementById("loginForm").addEventListener("submit", function(e) {
+    e.preventDefault(); // 기본 폼 제출 방지
+    
+    const form = e.target;
     const button = document.querySelector(".login-button");
     const buttonText = document.querySelector(".button-text");
+    const alertContainer = document.querySelector(".login-form");
     
+    // 로딩 상태
     button.disabled = true;
     buttonText.textContent = "로그인 중...";
     
-    // 실제 제출 계속 진행
+    // 기존 알림 메시지 제거
+    const existingAlerts = alertContainer.querySelectorAll(".alert");
+    existingAlerts.forEach(alert => alert.remove());
+    
+    // 폼 데이터 수집
+    const formData = new FormData(form);
+    const data = {
+        email: formData.get("email"),
+        password: formData.get("password"),
+        remember: formData.has("remember"),
+        _token: formData.get("_token")
+    };
+    
+    // API 호출
+    fetch("/BPM/api/auth/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            // 성공 메시지 표시
+            showAlert("success", result.message);
+            
+            // 2초 후 대시보드로 이동
+            setTimeout(() => {
+                window.location.href = "/BPM/dashboard";
+            }, 2000);
+        } else {
+            // 오류 메시지 표시
+            showAlert("error", result.message);
+            
+            // 버튼 상태 복원
+            button.disabled = false;
+            buttonText.textContent = "로그인";
+        }
+    })
+    .catch(error => {
+        console.error("로그인 오류:", error);
+        showAlert("error", "네트워크 오류가 발생했습니다. 다시 시도해주세요.");
+        
+        // 버튼 상태 복원
+        button.disabled = false;
+        buttonText.textContent = "로그인";
+    });
 });
+
+// 알림 메시지 표시 함수
+function showAlert(type, message) {
+    const alertDiv = document.createElement("div");
+    alertDiv.className = `alert alert-${type}`;
+    alertDiv.textContent = message;
+    
+    // CSRF 토큰 다음에 삽입
+    const csrfInput = document.querySelector('input[name="_token"]');
+    csrfInput.parentNode.insertBefore(alertDiv, csrfInput.nextSibling);
+}
 
 // 입력 필드 자동 포커스
 document.addEventListener("DOMContentLoaded", function() {

@@ -292,6 +292,86 @@ class Router
 }
 
 /**
+ * 인증 관리자 클래스
+ */
+class AuthManager
+{
+    private static $auth = null;
+    
+    /**
+     * Auth 인스턴스 반환
+     */
+    private static function getAuth(): Auth
+    {
+        if (self::$auth === null) {
+            self::$auth = Auth::getInstance();
+        }
+        return self::$auth;
+    }
+    
+    /**
+     * 로그인 상태 확인
+     */
+    public static function isLoggedIn(): bool
+    {
+        return self::getAuth()->isLoggedIn();
+    }
+    
+    /**
+     * 현재 사용자 정보 반환
+     */
+    public static function getCurrentUser(): ?array
+    {
+        return self::getAuth()->getCurrentUser();
+    }
+    
+    /**
+     * 관리자 권한 확인
+     */
+    public static function isAdmin(): bool
+    {
+        $user = self::getCurrentUser();
+        return $user && in_array($user['role'], ['founder', 'admin']);
+    }
+    
+    /**
+     * 특정 역할 권한 확인
+     */
+    public static function hasRole(string $role): bool
+    {
+        $user = self::getCurrentUser();
+        return $user && $user['role'] === $role;
+    }
+    
+    /**
+     * 다중 역할 권한 확인
+     */
+    public static function hasAnyRole(array $roles): bool
+    {
+        $user = self::getCurrentUser();
+        return $user && in_array($user['role'], $roles);
+    }
+    
+    /**
+     * 회사 ID 확인
+     */
+    public static function getCompanyId(): ?int
+    {
+        $user = self::getCurrentUser();
+        return $user ? (int)$user['company_id'] : null;
+    }
+    
+    /**
+     * 사용자 ID 확인
+     */
+    public static function getUserId(): ?int
+    {
+        $user = self::getCurrentUser();
+        return $user ? (int)$user['id'] : null;
+    }
+}
+
+/**
  * 미들웨어 클래스들
  */
 class Middlewares

@@ -62,7 +62,8 @@ CREATE TABLE bpm_users (
     id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     email VARCHAR(255) UNIQUE NOT NULL,
     username VARCHAR(100) NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL COMMENT '표시명',
+    password VARCHAR(255) NOT NULL COMMENT '암호화된 비밀번호',
     first_name VARCHAR(100),
     last_name VARCHAR(100),
     phone VARCHAR(50),
@@ -70,12 +71,21 @@ CREATE TABLE bpm_users (
     email_verified BOOLEAN DEFAULT FALSE,
     email_verified_at TIMESTAMP NULL,
     last_login_at TIMESTAMP NULL,
+    login_count INT DEFAULT 0 COMMENT '로그인 횟수',
+    
+    -- Remember Me 토큰 관련
+    remember_token VARCHAR(100) NULL COMMENT 'Remember Me 토큰',
+    remember_expires TIMESTAMP NULL COMMENT 'Remember 토큰 만료일',
+    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL COMMENT '소프트 삭제',
     
     INDEX idx_email (email),
     INDEX idx_status (status),
-    INDEX idx_created_at (created_at)
+    INDEX idx_remember_token (remember_token),
+    INDEX idx_created_at (created_at),
+    INDEX idx_deleted_at (deleted_at)
 );
 
 -- ===========================
@@ -83,7 +93,7 @@ CREATE TABLE bpm_users (
 -- ===========================
 
 -- 회사 내 사용자 역할 (멀티테넌트 핵심)
-CREATE TABLE bmp_company_users (
+CREATE TABLE bpm_company_users (
     id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     company_id CHAR(36) NOT NULL,
     user_id CHAR(36) NOT NULL,
@@ -488,3 +498,159 @@ CREATE INDEX idx_bmp_company_users_role_status ON bmp_company_users (company_id,
 CREATE INDEX idx_bpm_processes_company_owner ON bpm_processes (company_id, owner_user_id);
 CREATE INDEX idx_bpm_tasks_company_responsible ON bpm_tasks (company_id, responsible_user_id);
 CREATE INDEX idx_bpm_departments_company_parent ON bpm_departments (company_id, parent_department_id);
+
+-- ===========================
+-- 12. AI 챗봇 시스템
+-- ===========================
+
+-- 챗봇 세션 테이블
+CREATE TABLE bpm_chat_sessions (
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    company_id CHAR(36) NOT NULL,
+    user_id CHAR(36) NOT NULL,
+    session_token VARCHAR(255) UNIQUE NOT NULL,
+    status ENUM('active', 'ended', 'expired') DEFAULT 'active',
+    start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    end_time TIMESTAMP NULL,
+    last_activity TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    user_agent TEXT,
+    ip_address VARCHAR(45),
+    
+    FOREIGN KEY (company_id) REFERENCES bpm_companies(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES bpm_users(id) ON DELETE CASCADE,
+    INDEX idx_session_company_user (company_id, user_id),
+    INDEX idx_session_token (session_token),
+    INDEX idx_session_status (status),
+    INDEX idx_last_activity (last_activity)
+);
+
+-- 채팅 메시지 테이블
+CREATE TABLE bpm_chat_messages (
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    session_id CHAR(36) NOT NULL,
+    message_type ENUM('user', 'bot', 'system') NOT NULL,
+    content TEXT NOT NULL,
+    response_time_ms INT DEFAULT 0 COMMENT 'AI 응답 시간(밀리초)',
+    feedback_score TINYINT NULL COMMENT '사용자 피드백 점수(1-5)',
+    feedback_comment TEXT NULL COMMENT '사용자 피드백 코멘트',
+    context_data JSON COMMENT '대화 컨텍스트 데이터',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (session_id) REFERENCES bpm_chat_sessions(id) ON DELETE CASCADE,
+    INDEX idx_message_session (session_id),
+    INDEX idx_message_type (message_type),
+    INDEX idx_message_created (created_at),
+    INDEX idx_feedback_score (feedback_score)
+);
+
+-- FAQ 관리 테이블
+CREATE TABLE bpm_chat_faq (
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    company_id CHAR(36) NULL COMMENT '회사별 FAQ (NULL = 전역)',
+    category VARCHAR(100) NOT NULL DEFAULT 'general',
+    question TEXT NOT NULL,
+    answer TEXT NOT NULL,
+    keywords JSON COMMENT '검색 키워드 배열',
+    priority INT DEFAULT 0 COMMENT '우선순위 (높을수록 우선)',
+    usage_count INT DEFAULT 0 COMMENT '사용 횟수',
+    is_active BOOLEAN DEFAULT TRUE,
+    created_by CHAR(36) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (company_id) REFERENCES bpm_companies(id) ON DELETE CASCADE,
+    FOREIGN KEY (created_by) REFERENCES bpm_users(id) ON DELETE CASCADE,
+    INDEX idx_faq_company_category (company_id, category),
+    INDEX idx_faq_active (is_active),
+    INDEX idx_faq_priority (priority DESC),
+    INDEX idx_faq_usage (usage_count DESC),
+    FULLTEXT idx_faq_search (question, answer)
+);
+
+-- 매뉴얼 관리 테이블
+CREATE TABLE bpm_chat_manual (
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    company_id CHAR(36) NULL COMMENT '회사별 매뉴얼 (NULL = 전역)',
+    module_name VARCHAR(100) NOT NULL COMMENT 'BPM 모듈명',
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    tags JSON COMMENT '태그 배열',
+    version VARCHAR(20) DEFAULT '1.0',
+    is_active BOOLEAN DEFAULT TRUE,
+    created_by CHAR(36) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (company_id) REFERENCES bpm_companies(id) ON DELETE CASCADE,
+    FOREIGN KEY (created_by) REFERENCES bpm_users(id) ON DELETE CASCADE,
+    INDEX idx_manual_company_module (company_id, module_name),
+    INDEX idx_manual_active (is_active),
+    INDEX idx_manual_version (version),
+    FULLTEXT idx_manual_search (title, content)
+);
+
+-- 관리자 답변 템플릿 테이블
+CREATE TABLE bpm_chat_admin_responses (
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    company_id CHAR(36) NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    trigger_keywords JSON COMMENT '트리거 키워드 배열',
+    response_template TEXT NOT NULL,
+    variables JSON COMMENT '템플릿 변수 정의',
+    usage_count INT DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_by CHAR(36) NOT NULL,
+    approved_by CHAR(36) NULL COMMENT '승인자',
+    approved_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (company_id) REFERENCES bpm_companies(id) ON DELETE CASCADE,
+    FOREIGN KEY (created_by) REFERENCES bpm_users(id) ON DELETE CASCADE,
+    FOREIGN KEY (approved_by) REFERENCES bpm_users(id) ON DELETE SET NULL,
+    INDEX idx_admin_response_company (company_id),
+    INDEX idx_admin_response_category (category),
+    INDEX idx_admin_response_active (is_active),
+    INDEX idx_admin_response_approved (approved_by, approved_at)
+);
+
+-- 챗봇 학습 데이터 테이블
+CREATE TABLE bpm_chat_training_data (
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    company_id CHAR(36) NULL COMMENT '회사별 데이터 (NULL = 전역)',
+    data_type ENUM('conversation', 'feedback', 'correction') NOT NULL,
+    input_text TEXT NOT NULL,
+    expected_output TEXT NOT NULL,
+    context_info JSON COMMENT '컨텍스트 정보',
+    quality_score DECIMAL(3,2) DEFAULT 0.00 COMMENT '품질 점수 0-1',
+    is_verified BOOLEAN DEFAULT FALSE,
+    verified_by CHAR(36) NULL,
+    verified_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (company_id) REFERENCES bpm_companies(id) ON DELETE CASCADE,
+    FOREIGN KEY (verified_by) REFERENCES bpm_users(id) ON DELETE SET NULL,
+    INDEX idx_training_company_type (company_id, data_type),
+    INDEX idx_training_verified (is_verified),
+    INDEX idx_training_quality (quality_score DESC),
+    FULLTEXT idx_training_search (input_text, expected_output)
+);
+
+-- 초기 FAQ 데이터
+INSERT INTO bpm_chat_faq (company_id, category, question, answer, keywords, priority, created_by) VALUES
+(NULL, 'login', 'BPM에 로그인할 수 없어요', 'BPM 로그인 문제는 다음과 같이 해결하세요:\n1. 이메일과 비밀번호를 정확히 입력했는지 확인\n2. 비밀번호를 잊었다면 "비밀번호 재설정" 클릭\n3. 계정이 비활성화되었다면 관리자에게 문의\n4. 여전히 문제가 있다면 브라우저 캐시를 삭제해보세요', '["로그인", "패스워드", "비밀번호", "접속", "계정"]', 10, (SELECT id FROM bpm_users LIMIT 1)),
+(NULL, 'navigation', '모듈 간 이동은 어떻게 하나요?', '모듈 간 이동 방법:\n1. 좌측 사이드바에서 원하는 모듈 클릭\n2. 상단 브레드크럼에서 이전 페이지로 이동\n3. 모듈별 색상 테마로 현재 위치 확인 가능\n4. 검색 기능으로 빠른 페이지 찾기', '["모듈", "이동", "네비게이션", "메뉴", "사이드바"]', 9, (SELECT id FROM bpm_users LIMIT 1)),
+(NULL, 'permissions', '권한이 없다고 나와요', '권한 관련 문제 해결:\n1. 현재 권한 레벨 확인 (Member/Process Owner/Admin/Founder)\n2. 해당 기능에 필요한 권한 확인\n3. 권한이 부족하면 관리자에게 권한 승급 요청\n4. 임시 권한이 만료되었는지 확인', '["권한", "접근", "승인", "관리자", "제한"]', 8, (SELECT id FROM bpm_users LIMIT 1));
+
+-- 초기 매뉴얼 데이터
+INSERT INTO bpm_chat_manual (company_id, module_name, title, content, tags, created_by) VALUES
+(NULL, 'organization', '조직관리 모듈 사용법', '조직관리 모듈 사용 가이드:\n\n1. **회사 등록**\n   - 좌측 메뉴에서 "조직관리" 선택\n   - "회사 추가" 버튼 클릭\n   - 회사 정보 입력 후 저장\n\n2. **부서 관리**\n   - 부서 트리에서 "+" 버튼으로 하위 부서 추가\n   - 드래그 앤 드롭으로 부서 이동\n   - 부서별 담당자 지정\n\n3. **조직도 보기**\n   - "조직도 보기" 탭 선택\n   - 시각적 조직 구조 확인\n   - 확대/축소 및 인쇄 기능 활용', '["조직관리", "회사", "부서", "조직도"]', (SELECT id FROM bpm_users LIMIT 1)),
+(NULL, 'members', '구성원관리 모듈 사용법', '구성원관리 모듈 사용 가이드:\n\n1. **구성원 초대**\n   - "구성원 초대" 버튼 클릭\n   - 이메일 입력 및 권한 선택\n   - 초대 메일 발송\n\n2. **권한 관리**\n   - 구성원 목록에서 권한 변경\n   - 4단계 권한: Founder > Admin > Process Owner > Member\n   - 권한별 접근 가능 기능 확인\n\n3. **부서 배치**\n   - 구성원을 해당 부서에 배치\n   - 복수 부서 소속 가능\n   - 인사이동 이력 자동 기록', '["구성원", "초대", "권한", "부서배치"]', (SELECT id FROM bpm_users LIMIT 1));
+
+-- 챗봇 시스템 설정
+INSERT INTO bpm_system_settings (setting_key, setting_value, setting_type, description, is_public) VALUES
+('chatbot_enabled', 'true', 'boolean', '챗봇 기능 활성화', TRUE),
+('chatbot_response_timeout', '30', 'number', '챗봇 응답 타임아웃(초)', FALSE),
+('chatbot_max_session_duration', '3600', 'number', '최대 세션 지속 시간(초)', FALSE),
+('chatbot_gemini_model', 'gemini-1.5-flash', 'string', 'Gemini AI 모델명', FALSE),
+('chatbot_default_language', 'ko', 'string', '기본 언어 설정', TRUE);
