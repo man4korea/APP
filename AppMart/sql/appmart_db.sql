@@ -1,104 +1,79 @@
--- AppMart 데이터베이스 스키마
--- Version: 1.0
--- Create at 2508041100
+-- AppMart Database Schema
+-- Created for XAMPP Development Environment
 
--- 데이터베이스 생성 (이미 존재하면 사용)
-CREATE DATABASE IF NOT EXISTS `appmart_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `appmart_db`;
+CREATE DATABASE IF NOT EXISTS appmart_db;
+USE appmart_db;
 
--- --------------------------------------------------------
+-- Users table
+CREATE TABLE IF NOT EXISTS users (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    email varchar(255) NOT NULL,
+    password_hash text NOT NULL,
+    nickname varchar(100) NOT NULL,
+    role enum('user','developer','admin') NOT NULL DEFAULT 'user',
+    created_at datetime NOT NULL DEFAULT current_timestamp(),
+    PRIMARY KEY (id),
+    UNIQUE KEY email (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- 테이블 구조 `users`
---
+-- Apps table
+CREATE TABLE IF NOT EXISTS apps (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    title varchar(255) NOT NULL,
+    description text NOT NULL,
+    tech_stack text DEFAULT NULL,
+    db_type varchar(100) DEFAULT NULL,
+    file_url text NOT NULL,
+    thumbnail text DEFAULT NULL,
+    price int(11) NOT NULL DEFAULT 0,
+    status enum('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+    owner_id int(11) NOT NULL,
+    created_at datetime NOT NULL DEFAULT current_timestamp(),
+    PRIMARY KEY (id),
+    KEY owner_id (owner_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password_hash` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nickname` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role` enum('user','developer','admin') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'user',
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- Purchases table
+CREATE TABLE IF NOT EXISTS purchases (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    user_id int(11) NOT NULL,
+    app_id int(11) NOT NULL,
+    purchase_date datetime NOT NULL DEFAULT current_timestamp(),
+    amount int(11) NOT NULL,
+    status enum('completed','pending','cancelled') NOT NULL DEFAULT 'pending',
+    PRIMARY KEY (id),
+    KEY user_id (user_id),
+    KEY app_id (app_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
+-- Requests table
+CREATE TABLE IF NOT EXISTS requests (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    user_id int(11) NOT NULL,
+    title varchar(255) NOT NULL,
+    description text NOT NULL,
+    tech_requirements text DEFAULT NULL,
+    budget int(11) DEFAULT NULL,
+    deadline date DEFAULT NULL,
+    status enum('open','in_progress','completed','cancelled') NOT NULL DEFAULT 'open',
+    created_at datetime NOT NULL DEFAULT current_timestamp(),
+    PRIMARY KEY (id),
+    KEY user_id (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- 테이블 구조 `apps`
---
+-- Foreign key constraints
+ALTER TABLE apps
+    ADD CONSTRAINT apps_ibfk_1 FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE;
 
-CREATE TABLE `apps` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tech_stack` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'JSON 또는 CSV 형태',
-  `db_type` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `file_url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `thumbnail` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `price` int(11) NOT NULL DEFAULT 0,
-  `status` enum('pending','approved','rejected') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
-  `owner_id` int(11) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `owner_id` (`owner_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ALTER TABLE purchases
+    ADD CONSTRAINT purchases_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    ADD CONSTRAINT purchases_ibfk_2 FOREIGN KEY (app_id) REFERENCES apps (id) ON DELETE CASCADE;
 
--- --------------------------------------------------------
+ALTER TABLE requests
+    ADD CONSTRAINT requests_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE;
 
---
--- 테이블 구조 `purchases`
---
-
-CREATE TABLE `purchases` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `app_id` int(11) NOT NULL,
-  `price` int(11) NOT NULL,
-  `purchased_at` datetime NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `app_id` (`app_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- 테이블 구조 `requests`
---
-
-CREATE TABLE `requests` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `matched_developer_id` int(11) DEFAULT NULL,
-  `status` enum('open','matched','completed') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'open',
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- 테이블의 제약사항 추가
---
-
---
--- 테이블의 제약사항 `apps`
---
-ALTER TABLE `apps`
-  ADD CONSTRAINT `apps_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- 테이블의 제약사항 `purchases`
---
-ALTER TABLE `purchases`
-  ADD CONSTRAINT `purchases_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `purchases_ibfk_2` FOREIGN KEY (`app_id`) REFERENCES `apps` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- 테이블의 제약사항 `requests`
---
-ALTER TABLE `requests`
-  ADD CONSTRAINT `requests_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+-- Insert sample data for testing (optional)
+INSERT INTO users (email, password_hash, nickname, role) VALUES 
+('admin@appmart.com', '$2y$10$example_hash_here', 'Admin', 'admin'),
+('dev@appmart.com', '$2y$10$example_hash_here', 'Developer', 'developer'),
+('user@appmart.com', '$2y$10$example_hash_here', 'TestUser', 'user');
