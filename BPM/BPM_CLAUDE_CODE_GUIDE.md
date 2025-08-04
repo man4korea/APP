@@ -308,8 +308,8 @@ npm run deploy:quick
 # OneDrive 백업만
 npm run backup
 
-# 웹서버 배포만
-npm run deploy:web
+# 웹호스팅 FTP 배포만
+npm run deploy:ftp
 ```
 
 ### 배포 전 체크리스트
@@ -323,8 +323,11 @@ npm test
 # 3. Git 상태 확인
 git status
 
-# 4. 환경 설정 확인
+# 4. 환경 설정 확인 (웹호스팅 환경)
 cat .env
+echo "데이터베이스: bpmapp"
+echo "FTP 서버: 112.175.185.148"
+echo "사이트 URL: http://bpmapp.dothome.co.kr"
 
 # 5. 권한 확인
 ls -la
@@ -357,9 +360,10 @@ shrimp-task-manager:list_tasks all
 # Filesystem 권한 확인
 ls -la C:\xampp\htdocs\BPM
 
-# Git 상태 확인
-git status
-git remote -v
+# Git 상태 확인 (Git 경로: C:\Program Files\Git)
+"C:\Program Files\Git\bin\git.exe" status
+"C:\Program Files\Git\bin\git.exe" remote -v
+echo "GitHub 저장소: https://github.com/man4korea/ai-collaboration"
 ```
 
 **테스트 실패**:

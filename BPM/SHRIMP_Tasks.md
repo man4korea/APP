@@ -560,9 +560,9 @@ if [ $? -eq 0 ]; then
   echo "📁 OneDrive 복사 중..."
   xcopy "C:\xampp\htdocs\BPM\*" "C:\Users\man4k\OneDrive\문서\APP\bpm\" /E /Y /I
   
-  # 4. 웹서버 배포
-  echo "🌐 웹서버 배포 중..."
-  xcopy "C:\xampp\htdocs\BPM\*" "Z:\html\bpm\" /E /Y /I
+  # 4. 웹호스팅 FTP 배포
+  echo "🌐 웹호스팅 FTP 배포 중..."
+  ftp -s:deploy-script.txt 112.175.185.148
   
   echo "🚀 배포 완료!"
 else
@@ -574,7 +574,8 @@ fi
 ### 📂 배포 경로 설정
 - **로컬 개발**: `C:\xampp\htdocs\BPM\`
 - **OneDrive 백업**: `C:\Users\man4k\OneDrive\문서\APP\bpm\`  
-- **웹서버 배포**: `Z:\html\bpm\`
+- **웹호스팅 배포**: `http://bpmapp.dothome.co.kr`
+- **FTP 서버**: `112.175.185.148`
 
 ### 🚨 주의사항
 1. **작업 순서 준수**: 의존성 없는 작업부터 진행

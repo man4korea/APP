@@ -143,7 +143,7 @@ npm run deploy:bat
 ### 배포 단계
 1. **🧪 테스트**: Playwright 자동화 테스트 실행
 2. **📁 OneDrive**: `C:\Users\man4k\OneDrive\문서\APP\bpm` 백업
-3. **🌐 웹서버**: `Z:\html\bpm` 배포
+3. **🌐 웹서버**: `W:\html` 배포
 4. **📊 로그**: 배포 결과 기록
 
 ## 📊 작업 관리
@@ -236,7 +236,7 @@ echo %PATH%
 ## 📞 지원 및 문의
 
 ### 개발팀 연락처
-- **이메일**: dev@bmp-system.com
+- **이메일**: man4korea@hotmail.com
 - **이슈 트래킹**: `SHRIMP_Tasks.md` 참조
 - **문서**: `CLAUDE.md` 상세 가이드
 

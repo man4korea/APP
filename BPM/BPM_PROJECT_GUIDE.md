@@ -94,13 +94,14 @@ SHRIMP_Tasks.md → 작업 선택 → 개발 진행 → 완료 검증
 ## 🚀 4단계 자동 배포
 
 ```
-XAMPP → Git → OneDrive → 웹서버
+XAMPP → Git → OneDrive → 웹호스팅
 ```
 
 **배포 경로**:
 - 로컬: `C:\xampp\htdocs\BPM\`
 - OneDrive: `C:\Users\man4k\OneDrive\문서\APP\bpm\`
-- 웹서버: `Z:\html\bpm\`
+- 웹호스팅: `http://bpmapp.dothome.co.kr`
+- FTP 서버: `112.175.185.148`
 
 ---
 
@@ -109,20 +110,36 @@ XAMPP → Git → OneDrive → 웹서버
 모든 API 키와 중요 설정은 `.env` 파일에 저장:
 
 ```bash
-# 데이터베이스
+# 데이터베이스 설정 (웹호스팅 환경용)
 DB_HOST=localhost
-DB_DATABASE=bpm_database
-DB_USERNAME=root
-DB_PASSWORD=
+DB_NAME=bpmapp
+DB_USER=bpmapp
+DB_PASS=dmlwjdqn!Wkd24
+DB_CHARSET=utf8mb4
+
+# FTP 설정 (관리용)
+FTP_HOST=112.175.185.148
+FTP_USER=bpmapp
+FTP_PASS=dmlwjdqn!Wkd24
+
+# 사이트 설정
+SITE_URL=http://bpmapp.dothome.co.kr
+ADMIN_DEFAULT_USER=bpmapp
+ADMIN_DEFAULT_PASS=dmlwjdqn!Wkd24
 
 # 보안
-APP_KEY=BPM_SECRET_KEY_2025
-JWT_SECRET=JWT_SECRET_KEY_FOR_BPM
+APP_KEY=BPM_SECRET_KEY_2025_CHANGE_THIS
+JWT_SECRET=JWT_SECRET_KEY_FOR_BPM_SYSTEM
+
+# Git 설정
+LOCAL_GIT_REPOSITORY_PATH="C:\Program Files\Git"
+GITHUB_USERNAME=man4korea
+GITHUB_REPO=ai-collaboration
 
 # 배포 경로
 LOCAL_PATH=C:\\xampp\\htdocs\\BPM
 ONEDRIVE_PATH=C:\\Users\\man4k\\OneDrive\\문서\\APP\\bpm
-WEBSERVER_PATH=Z:\\html\\bpm
+WEBSERVER_PATH=W:\\html
 ```
 
 ---
