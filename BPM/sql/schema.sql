@@ -647,10 +647,217 @@ INSERT INTO bpm_chat_manual (company_id, module_name, title, content, tags, crea
 (NULL, 'organization', '조직관리 모듈 사용법', '조직관리 모듈 사용 가이드:\n\n1. **회사 등록**\n   - 좌측 메뉴에서 "조직관리" 선택\n   - "회사 추가" 버튼 클릭\n   - 회사 정보 입력 후 저장\n\n2. **부서 관리**\n   - 부서 트리에서 "+" 버튼으로 하위 부서 추가\n   - 드래그 앤 드롭으로 부서 이동\n   - 부서별 담당자 지정\n\n3. **조직도 보기**\n   - "조직도 보기" 탭 선택\n   - 시각적 조직 구조 확인\n   - 확대/축소 및 인쇄 기능 활용', '["조직관리", "회사", "부서", "조직도"]', (SELECT id FROM bpm_users LIMIT 1)),
 (NULL, 'members', '구성원관리 모듈 사용법', '구성원관리 모듈 사용 가이드:\n\n1. **구성원 초대**\n   - "구성원 초대" 버튼 클릭\n   - 이메일 입력 및 권한 선택\n   - 초대 메일 발송\n\n2. **권한 관리**\n   - 구성원 목록에서 권한 변경\n   - 4단계 권한: Founder > Admin > Process Owner > Member\n   - 권한별 접근 가능 기능 확인\n\n3. **부서 배치**\n   - 구성원을 해당 부서에 배치\n   - 복수 부서 소속 가능\n   - 인사이동 이력 자동 기록', '["구성원", "초대", "권한", "부서배치"]', (SELECT id FROM bpm_users LIMIT 1));
 
+-- ===========================
+-- 13. 사용자 초대 및 인증 시스템
+-- ===========================
+
+-- 사용자 초대 테이블
+CREATE TABLE bpm_user_invitations (
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    company_id CHAR(36) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    role_type ENUM('founder', 'admin', 'process_owner', 'member') NOT NULL DEFAULT 'member',
+    department VARCHAR(255),
+    job_title VARCHAR(255),
+    message TEXT COMMENT '초대 메시지',
+    invite_token VARCHAR(255) UNIQUE NOT NULL,
+    status ENUM('pending', 'sent', 'accepted', 'expired', 'cancelled') DEFAULT 'pending',
+    invited_by CHAR(36) NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    accepted_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (company_id) REFERENCES bpm_companies(id) ON DELETE CASCADE,
+    FOREIGN KEY (invited_by) REFERENCES bpm_users(id) ON DELETE CASCADE,
+    
+    INDEX idx_invitation_token (invite_token),
+    INDEX idx_invitation_email (email),
+    INDEX idx_invitation_company (company_id),
+    INDEX idx_invitation_status (status),
+    INDEX idx_invitation_expires (expires_at)
+);
+
+-- 비밀번호 재설정 테이블
+CREATE TABLE bpm_password_resets (
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    user_id CHAR(36) NOT NULL,
+    token VARCHAR(255) UNIQUE NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    used BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (user_id) REFERENCES bpm_users(id) ON DELETE CASCADE,
+    
+    UNIQUE KEY unique_user_reset (user_id),
+    INDEX idx_reset_token (token),
+    INDEX idx_reset_expires (expires_at),
+    INDEX idx_reset_used (used)
+);
+
+-- 이메일 인증 테이블
+CREATE TABLE bpm_email_verifications (
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    user_id CHAR(36) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    verification_token VARCHAR(255) UNIQUE NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    verified BOOLEAN DEFAULT FALSE,
+    verified_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (user_id) REFERENCES bpm_users(id) ON DELETE CASCADE,
+    
+    INDEX idx_verification_token (verification_token),
+    INDEX idx_verification_email (email),
+    INDEX idx_verification_user (user_id),
+    INDEX idx_verification_expires (expires_at)
+);
+
+-- 사용자 세션 관리 테이블
+CREATE TABLE bpm_user_sessions (
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    user_id CHAR(36) NOT NULL,
+    company_id CHAR(36) NOT NULL,
+    session_token VARCHAR(255) UNIQUE NOT NULL,
+    refresh_token VARCHAR(255) UNIQUE NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    last_activity TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (user_id) REFERENCES bpm_users(id) ON DELETE CASCADE,
+    FOREIGN KEY (company_id) REFERENCES bpm_companies(id) ON DELETE CASCADE,
+    
+    INDEX idx_session_token (session_token),
+    INDEX idx_refresh_token (refresh_token),
+    INDEX idx_session_user (user_id),
+    INDEX idx_session_company (company_id),
+    INDEX idx_session_active (is_active),
+    INDEX idx_session_expires (expires_at)
+);
+
+-- 사용자 알림 설정 테이블
+CREATE TABLE bpm_user_notification_settings (
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    user_id CHAR(36) NOT NULL,
+    company_id CHAR(36) NOT NULL,
+    email_notifications BOOLEAN DEFAULT TRUE,
+    browser_notifications BOOLEAN DEFAULT TRUE,
+    mobile_notifications BOOLEAN DEFAULT TRUE,
+    notification_types JSON COMMENT '알림 유형별 설정',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (user_id) REFERENCES bpm_users(id) ON DELETE CASCADE,
+    FOREIGN KEY (company_id) REFERENCES bpm_companies(id) ON DELETE CASCADE,
+    
+    UNIQUE KEY unique_user_company_settings (user_id, company_id),
+    INDEX idx_notification_user (user_id),
+    INDEX idx_notification_company (company_id)
+);
+
+-- ===========================
+-- 14. 사용자 관련 뷰 및 프로시저
+-- ===========================
+
+-- 사용자 상세 정보 뷰
+CREATE VIEW bpm_user_details AS
+SELECT 
+    u.id,
+    u.email,
+    u.username,
+    u.name,
+    u.first_name,
+    u.last_name,
+    u.phone,
+    u.status,
+    u.email_verified,
+    u.last_login_at,
+    u.login_count,
+    cu.company_id,
+    c.company_name,
+    cu.role_type,
+    cu.department,
+    cu.job_title,
+    cu.employee_id,
+    cu.status as company_status,
+    cu.assigned_at,
+    d.department_name,
+    d.head_user_id = u.id as is_department_head
+FROM bpm_users u
+JOIN bpm_company_users cu ON u.id = cu.user_id
+JOIN bpm_companies c ON cu.company_id = c.id
+LEFT JOIN bpm_departments d ON cu.department = d.department_name AND d.company_id = cu.company_id
+WHERE u.status = 'active' AND cu.is_active = TRUE;
+
+-- 초대 현황 뷰
+CREATE VIEW bpm_invitation_status AS
+SELECT 
+    i.id,
+    i.company_id,
+    c.company_name,
+    i.email,
+    i.role_type,
+    i.department,
+    i.job_title,
+    i.status,
+    i.expires_at,
+    i.created_at,
+    u.name as inviter_name,
+    CASE 
+        WHEN i.expires_at < NOW() THEN 'expired'
+        WHEN i.status = 'accepted' THEN 'completed'
+        WHEN i.status = 'cancelled' THEN 'cancelled'
+        ELSE 'pending'
+    END as current_status
+FROM bpm_user_invitations i
+JOIN bpm_companies c ON i.company_id = c.id
+JOIN bpm_users u ON i.invited_by = u.id;
+
+-- 초대 만료 처리 프로시저
+DELIMITER //
+CREATE PROCEDURE bpm_expire_invitations()
+BEGIN
+    UPDATE bpm_user_invitations 
+    SET status = 'expired' 
+    WHERE status IN ('pending', 'sent') 
+    AND expires_at < NOW();
+END //
+DELIMITER ;
+
+-- 비밀번호 재설정 토큰 정리 프로시저
+DELIMITER //
+CREATE PROCEDURE bpm_cleanup_password_resets()
+BEGIN
+    DELETE FROM bpm_password_resets 
+    WHERE expires_at < NOW() OR used = TRUE;
+END //
+DELIMITER ;
+
+-- 비활성 세션 정리 프로시저
+DELIMITER //
+CREATE PROCEDURE bpm_cleanup_inactive_sessions()
+BEGIN
+    UPDATE bpm_user_sessions 
+    SET is_active = FALSE 
+    WHERE expires_at < NOW() OR last_activity < DATE_SUB(NOW(), INTERVAL 30 DAY);
+    
+    DELETE FROM bpm_user_sessions 
+    WHERE is_active = FALSE AND last_activity < DATE_SUB(NOW(), INTERVAL 90 DAY);
+END //
+DELIMITER ;
+
 -- 챗봇 시스템 설정
 INSERT INTO bpm_system_settings (setting_key, setting_value, setting_type, description, is_public) VALUES
 ('chatbot_enabled', 'true', 'boolean', '챗봇 기능 활성화', TRUE),
 ('chatbot_response_timeout', '30', 'number', '챗봇 응답 타임아웃(초)', FALSE),
 ('chatbot_max_session_duration', '3600', 'number', '최대 세션 지속 시간(초)', FALSE),
 ('chatbot_gemini_model', 'gemini-1.5-flash', 'string', 'Gemini AI 모델명', FALSE),
-('chatbot_default_language', 'ko', 'string', '기본 언어 설정', TRUE);
+('chatbot_default_language', 'ko', 'string', '기본 언어 설정', TRUE),
+('invitation_expires_days', '7', 'number', '초대 만료 일수', FALSE),
+('password_reset_expires_minutes', '30', 'number', '비밀번호 재설정 만료 시간(분)', FALSE),
+('email_verification_expires_hours', '24', 'number', '이메일 인증 만료 시간', FALSE),
+('session_expires_days', '30', 'number', '세션 만료 일수', FALSE);
