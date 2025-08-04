@@ -368,7 +368,7 @@ SELECT
     SUM(CASE WHEN cu.status = 'active' THEN 1 ELSE 0 END) as active_users,
     SUM(CASE WHEN cu.status = 'pending_approval' THEN 1 ELSE 0 END) as pending_users
 FROM bpm_companies c
-LEFT JOIN bmp_company_users cu ON c.id = cu.company_id AND cu.is_active = TRUE
+LEFT JOIN bpm_company_users cu ON c.id = cu.company_id AND cu.is_active = TRUE
 WHERE c.status = 'active'
 GROUP BY c.id, c.company_name, c.tax_number;
 
@@ -388,7 +388,7 @@ SELECT
     COUNT(p.id) as owned_processes,
     COUNT(t.id) as assigned_tasks
 FROM bpm_users u
-JOIN bmp_company_users cu ON u.id = cu.user_id
+JOIN bpm_company_users cu ON u.id = cu.user_id
 JOIN bpm_companies c ON cu.company_id = c.id
 LEFT JOIN bpm_departments d ON cu.department = d.department_name AND d.company_id = c.id
 LEFT JOIN bpm_processes p ON u.id = p.owner_user_id AND p.company_id = c.id
@@ -431,7 +431,7 @@ INSERT INTO bpm_system_settings (setting_key, setting_value, setting_type, descr
 
 -- 사용자 권한 체크 함수
 DELIMITER //
-CREATE FUNCTION bmp_check_user_permission(
+CREATE FUNCTION bpm_check_user_permission(
     p_user_id CHAR(36),
     p_company_id CHAR(36),
     p_required_role ENUM('founder', 'admin', 'process_owner', 'member')
@@ -443,7 +443,7 @@ BEGIN
     DECLARE result BOOLEAN DEFAULT FALSE;
     
     SELECT role_type INTO user_role
-    FROM bmp_company_users
+    FROM bpm_company_users
     WHERE user_id = p_user_id 
       AND company_id = p_company_id 
       AND is_active = TRUE 
@@ -467,7 +467,7 @@ DELIMITER ;
 
 -- 관리자 수 체크 프로시저
 DELIMITER //
-CREATE PROCEDURE bmp_check_min_admin_count(
+CREATE PROCEDURE bpm_check_min_admin_count(
     IN p_company_id CHAR(36),
     OUT p_admin_count INT,
     OUT p_can_remove BOOLEAN
@@ -477,7 +477,7 @@ BEGIN
     
     -- 현재 관리자 수 계산
     SELECT COUNT(*) INTO p_admin_count
-    FROM bmp_company_users
+    FROM bpm_company_users
     WHERE company_id = p_company_id
       AND role_type IN ('founder', 'admin')
       AND is_active = TRUE
@@ -494,7 +494,7 @@ END //
 DELIMITER ;
 
 -- 추가 인덱스 최적화
-CREATE INDEX idx_bmp_company_users_role_status ON bmp_company_users (company_id, role_type, status);
+CREATE INDEX idx_bpm_company_users_role_status ON bpm_company_users (company_id, role_type, status);
 CREATE INDEX idx_bpm_processes_company_owner ON bpm_processes (company_id, owner_user_id);
 CREATE INDEX idx_bpm_tasks_company_responsible ON bpm_tasks (company_id, responsible_user_id);
 CREATE INDEX idx_bpm_departments_company_parent ON bpm_departments (company_id, parent_department_id);
@@ -860,4 +860,9 @@ INSERT INTO bpm_system_settings (setting_key, setting_value, setting_type, descr
 ('invitation_expires_days', '7', 'number', '초대 만료 일수', FALSE),
 ('password_reset_expires_minutes', '30', 'number', '비밀번호 재설정 만료 시간(분)', FALSE),
 ('email_verification_expires_hours', '24', 'number', '이메일 인증 만료 시간', FALSE),
-('session_expires_days', '30', 'number', '세션 만료 일수', FALSE);
+('session_expires_days', '30', 'number', '세션 만료 일수', FALSE),
+('org_chart_auto_layout', 'true', 'boolean', '조직도 자동 레이아웃 활성화', FALSE),
+('org_change_approval_required', 'true', 'boolean', '조직 변경 승인 필요', FALSE),
+('org_chart_default_template', 'hierarchical', 'string', '기본 조직도 템플릿', TRUE),
+('dept_head_assignment_approval', 'admin', 'string', '부서장 지정 승인 권한', FALSE),
+('max_org_levels', '10', 'number', '최대 조직 레벨', FALSE);
