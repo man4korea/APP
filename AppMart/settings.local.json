@@ -1,0 +1,130 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell:*)"
+    ],
+    "deny": []
+  },
+  "theme": "Default",
+  "selectedAuthType": "oauth-personal",
+  "mcpServers": {
+    "github": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@smithery-ai/github",
+        "--key",
+        "89871a9a-cf95-4de7-ae49-1d380312c282",
+        "--profile",
+        "evolutionary-termite-Omv5KV"
+      ]
+    },
+    "my-sequential-thinking-mcp-v1": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@zacharyliner1xds/my-sequential-thinking-mcp-v1",
+        "--key",
+        "89871a9a-cf95-4de7-ae49-1d380312c282",
+        "--profile",
+        "evolutionary-termite-Omv5KV"
+      ]
+    },
+    "mem0-memory-mcp": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@mem0ai/mem0-memory-mcp",
+        "--key",
+        "89871a9a-cf95-4de7-ae49-1d380312c282",
+        "--profile",
+        "evolutionary-termite-Omv5KV"
+      ]
+    },
+    "puppeteer": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@smithery-ai/puppeteer",
+        "--key",
+        "89871a9a-cf95-4de7-ae49-1d380312c282",
+        "--profile",
+        "evolutionary-termite-Omv5KV"
+      ]
+    },
+    "mcp-server-text-editor": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@bhouston/mcp-server-text-editor",
+        "--key",
+        "89871a9a-cf95-4de7-ae49-1d380312c282",
+        "--profile",
+        "evolutionary-termite-Omv5KV"
+      ]
+    },
+    "terminal-mcp-server": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@weidwonder/terminal-mcp-server",
+        "--key",
+        "89871a9a-cf95-4de7-ae49-1d380312c282",
+        "--profile",
+        "evolutionary-termite-Omv5KV"
+      ]
+    },
+    "context7-mcp": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@upstash/context7-mcp",
+        "--key",
+        "89871a9a-cf95-4de7-ae49-1d380312c282",
+        "--profile",
+        "evolutionary-termite-Omv5KV"
+      ]
+    },
+    "shrimp-task-manager": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "--config",
+        "{\"dataDir\":\"C:\\\\Users\\\\man4k\\\\OneDrive\\\\문서\\\\APP\\\\SHRIMP\"}",
+        "@cjo4m06/mcp-shrimp-task-manager"
+      ]
+    }
+  }
+}
