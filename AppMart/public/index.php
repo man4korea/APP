@@ -1,149 +1,168 @@
 <?php
-// AppMart Application Entry Point - Production Version
-session_start();
+/**
+ * AppMart Application Entry Point
+ * C:\xampp\htdocs\AppMart\public\index.php
+ * Create at 2508041600 Ver1.00
+ */
 
-// Load environment configuration
-function loadEnv($path) {
-    if (!file_exists($path)) {
-        die("Environment file not found: $path");
+// Load the application bootstrap
+require_once __DIR__ . '/../bootstrap.php';
+
+// Simple router implementation
+class Router {
+    private $routes = [];
+    private $current_route = '';
+    
+    public function __construct() {
+        $this->current_route = $_GET['route'] ?? '';
     }
     
-    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($lines as $line) {
-        if (strpos(trim($line), '#') === 0) {
-            continue; // Skip comments
+    public function get($path, $handler) {
+        $this->routes['GET'][$path] = $handler;
+        return $this;
+    }
+    
+    public function post($path, $handler) {
+        $this->routes['POST'][$path] = $handler;
+        return $this;
+    }
+    
+    public function dispatch() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        $path = $this->current_route;
+        
+        // Handle routes
+        if (isset($this->routes[$method][$path])) {
+            $handler = $this->routes[$method][$path];
+            
+            if (is_callable($handler)) {
+                return call_user_func($handler);
+            } elseif (is_string($handler)) {
+                return $this->handleControllerAction($handler);
+            }
         }
         
-        if (strpos($line, '=') !== false) {
-            list($key, $value) = explode('=', $line, 2);
-            $_ENV[trim($key)] = trim($value);
+        // 404 handling
+        $this->handle404();
+    }
+    
+    private function handleControllerAction($handler) {
+        list($controller, $action) = explode('@', $handler);
+        $controllerFile = __DIR__ . "/../src/controllers/{$controller}.php";
+        
+        if (file_exists($controllerFile)) {
+            require_once $controllerFile;
+            $controllerClass = "controllers\\{$controller}";
+            
+            if (class_exists($controllerClass)) {
+                $instance = new $controllerClass();
+                if (method_exists($instance, $action)) {
+                    return $instance->$action();
+                }
+            }
         }
+        
+        $this->handle404();
+    }
+    
+    private function handle404() {
+        http_response_code(404);
+        echo view('layouts/error', [
+            'title' => '404 - Page Not Found',
+            'message' => 'The requested page could not be found.',
+            'code' => 404
+        ]);
+        exit;
     }
 }
 
-// Load environment variables
-loadEnv(__DIR__ . '/.env');
+// Initialize router
+$router = new Router();
 
-// Set error reporting based on environment
-if (isset($_ENV['APP_DEBUG']) && $_ENV['APP_DEBUG'] === 'true') {
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-} else {
-    error_reporting(0);
-    ini_set('display_errors', 0);
+// Define routes
+$router->get('', function() {
+    require_once __DIR__ . '/../src/controllers/HomeController.php';
+    $controller = new controllers\HomeController();
+    return $controller->index();
+});
+
+$router->get('home', function() {
+    require_once __DIR__ . '/../src/controllers/HomeController.php';
+    $controller = new controllers\HomeController();
+    return $controller->index();
+});
+
+// Authentication routes
+$router->get('auth/login', 'AuthController@showLogin');
+$router->post('auth/login', 'AuthController@login');
+$router->get('auth/register', 'AuthController@showRegister');
+$router->post('auth/register', 'AuthController@register');
+$router->get('auth/logout', 'AuthController@logout');
+
+// App routes
+$router->get('apps', 'AppController@index');
+$router->get('apps/show', 'AppController@show');
+$router->get('apps/create', 'AppController@create');
+$router->post('apps/store', 'AppController@store');
+
+// User dashboard
+$router->get('dashboard', 'DashboardController@index');
+
+// Admin routes
+$router->get('admin', 'AdminController@index');
+$router->get('admin/apps', 'AdminController@apps');
+$router->get('admin/users', 'AdminController@users');
+
+// API routes
+$router->get('api/apps', 'ApiController@apps');
+$router->get('api/categories', 'ApiController@categories');
+
+// System routes
+$router->get('system/info', function() {
+    if (!config('app.debug')) {
+        http_response_code(403);
+        die('Access denied');
+    }
+    
+    phpinfo();
+});
+
+$router->get('system/test-db', function() {
+    global $pdo;
+    
+    try {
+        $stmt = $pdo->query("SELECT 1 as test");
+        $result = $stmt->fetch();
+        
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Database connection successful',
+            'test_result' => $result['test'],
+            'server_info' => $pdo->getAttribute(PDO::ATTR_SERVER_INFO)
+        ]);
+    } catch (Exception $e) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Database connection failed',
+            'error' => $e->getMessage()
+        ]);
+    }
+});
+
+// Dispatch the request
+try {
+    $router->dispatch();
+} catch (Exception $e) {
+    if (config('app.debug')) {
+        echo "<h1>Application Error</h1>";
+        echo "<p><strong>Error:</strong> " . $e->getMessage() . "</p>";
+        echo "<p><strong>File:</strong> " . $e->getFile() . ":" . $e->getLine() . "</p>";
+        echo "<pre>" . $e->getTraceAsString() . "</pre>";
+    } else {
+        echo view('layouts/error', [
+            'title' => 'Application Error',
+            'message' => 'An unexpected error occurred. Please try again later.',
+            'code' => 500
+        ]);
+    }
 }
-
-// Get the current page parameter
-$page = isset($_GET['page']) ? $_GET['page'] : 'home';
-
-?>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AppMart - <?php echo ucfirst($page); ?></title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
-        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
-        .info { background: #e3f2fd; padding: 15px; border-radius: 5px; margin: 15px 0; }
-        .success { background: #e8f5e8; color: #2e7d32; padding: 15px; border-radius: 5px; margin: 15px 0; }
-        .error { background: #ffebee; color: #c62828; padding: 15px; border-radius: 5px; margin: 15px 0; }
-        .nav { margin: 20px 0; }
-        .nav a { display: inline-block; margin-right: 15px; padding: 8px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; }
-        .nav a:hover { background: #0056b3; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <?php
-        switch ($page) {
-            case 'home':
-            default:
-                echo "<h1>🚀 AppMart - Production Environment</h1>";
-                
-                echo "<div class='info'>";
-                echo "<strong>Environment Information:</strong><br>";
-                echo "Environment: " . (isset($_ENV['APP_ENV']) ? $_ENV['APP_ENV'] : 'Unknown') . "<br>";
-                echo "Database: " . (isset($_ENV['DB_HOST']) ? $_ENV['DB_HOST'] : 'Unknown') . "/" . (isset($_ENV['DB_NAME']) ? $_ENV['DB_NAME'] : 'Unknown') . "<br>";
-                echo "Debug Mode: " . (isset($_ENV['APP_DEBUG']) && $_ENV['APP_DEBUG'] === 'true' ? 'ON' : 'OFF') . "<br>";
-                echo "PHP Version: " . phpversion() . "<br>";
-                echo "Server Time: " . date('Y-m-d H:i:s') . "<br>";
-                echo "</div>";
-                
-                echo "<div class='nav'>";
-                echo "<a href='?page=test-db'>Test Database Connection</a>";
-                echo "<a href='?page=phpinfo'>PHP Info</a>";
-                echo "<a href='?page=env'>Environment Variables</a>";
-                echo "</div>";
-                
-                echo "<h2>🎯 AppMart Project Status</h2>";
-                echo "<p>✅ Web server is running correctly</p>";
-                echo "<p>✅ PHP 8.4.10 is active</p>";
-                echo "<p>✅ Environment configuration loaded</p>";
-                echo "<p>🔄 Ready for application development</p>";
-                break;
-                
-            case 'test-db':
-                echo "<h1>🔗 Database Connection Test</h1>";
-                
-                try {
-                    if (!isset($_ENV['DB_HOST']) || !isset($_ENV['DB_NAME']) || !isset($_ENV['DB_USER'])) {
-                        throw new Exception("Database configuration missing in environment variables");
-                    }
-                    
-                    $pdo = new PDO(
-                        "mysql:host={$_ENV['DB_HOST']};dbname={$_ENV['DB_NAME']};charset=utf8mb4", 
-                        $_ENV['DB_USER'], 
-                        $_ENV['DB_PASS'],
-                        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-                    );
-                    
-                    echo "<div class='success'>";
-                    echo "✅ Database connection successful!<br>";
-                    echo "Host: " . $_ENV['DB_HOST'] . "<br>";
-                    echo "Database: " . $_ENV['DB_NAME'] . "<br>";
-                    echo "User: " . $_ENV['DB_USER'] . "<br>";
-                    echo "Connection: Active";
-                    echo "</div>";
-                    
-                } catch (PDOException $e) {
-                    echo "<div class='error'>";
-                    echo "❌ Database connection failed!<br>";
-                    echo "Error: " . $e->getMessage();
-                    echo "</div>";
-                } catch (Exception $e) {
-                    echo "<div class='error'>";
-                    echo "❌ Configuration error!<br>";
-                    echo "Error: " . $e->getMessage();
-                    echo "</div>";
-                }
-                
-                echo "<div class='nav'><a href='?page=home'>← Back to Home</a></div>";
-                break;
-                
-            case 'phpinfo':
-                echo "<h1>🔧 PHP Information</h1>";
-                phpinfo();
-                break;
-                
-            case 'env':
-                echo "<h1>🔧 Environment Variables</h1>";
-                echo "<div class='info'>";
-                echo "<strong>Loaded Environment Variables:</strong><br>";
-                foreach ($_ENV as $key => $value) {
-                    if (strpos($key, 'PASS') !== false || strpos($key, 'KEY') !== false) {
-                        echo "$key: *** (hidden for security) <br>";
-                    } else {
-                        echo "$key: $value <br>";
-                    }
-                }
-                echo "</div>";
-                echo "<div class='nav'><a href='?page=home'>← Back to Home</a></div>";
-                break;
-        }
-        ?>
-    </div>
-</body>
-</html>

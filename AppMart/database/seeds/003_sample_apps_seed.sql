@@ -1,0 +1,108 @@
+-- AppMart Sample Applications Seed Data
+-- File: 003_sample_apps_seed.sql
+-- Create at 2508041600 Ver1.00
+
+-- Simple sample applications for demonstration
+INSERT IGNORE INTO applications (
+    title,
+    slug,
+    description,
+    short_description,
+    version,
+    tech_stack,
+    database_type,
+    demo_url,
+    github_url,
+    documentation_url,
+    file_path,
+    file_size,
+    file_hash,
+    thumbnail,
+    screenshots,
+    price,
+    status,
+    featured,
+    owner_id,
+    category_id,
+    tags,
+    published_at
+) VALUES 
+(
+    'E-Commerce Starter Kit',
+    'ecommerce-starter-kit',
+    'A complete e-commerce solution built with modern PHP and MySQL. Features include product catalog, shopping cart, user authentication, order management, payment integration, and admin dashboard.',
+    'Complete e-commerce solution with cart, payments, and admin panel',
+    '2.1.0',
+    '["PHP 8.2", "MySQL 8.0", "Bootstrap 5", "jQuery", "Stripe API"]',
+    'MySQL',
+    'https://demo.appmart.com/ecommerce-kit',
+    'https://github.com/appmart/ecommerce-starter',
+    'https://docs.appmart.com/ecommerce-kit',
+    '/uploads/apps/ecommerce-starter-kit-v2.1.0.zip',
+    15728640,
+    'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+    '/uploads/thumbnails/ecommerce-starter-thumbnail.jpg',
+    '["screen1.jpg", "screen2.jpg"]',
+    49.99,
+    'approved',
+    1,
+    2,
+    2,
+    '["ecommerce", "php", "mysql", "bootstrap", "payment-gateway"]',
+    NOW()
+),
+(
+    'Blog CMS Pro',
+    'blog-cms-pro',
+    'Professional blogging platform with advanced content management features. Includes multi-author support, category management, SEO optimization, comment system, media library, and responsive themes.',
+    'Professional blogging platform with multi-author support',
+    '1.5.2',
+    '["PHP 8.1", "MySQL 8.0", "Twig Templates", "SCSS", "Alpine.js"]',
+    'MySQL',
+    'https://demo.appmart.com/blog-cms',
+    'https://github.com/appmart/blog-cms-pro',
+    'https://docs.appmart.com/blog-cms',
+    '/uploads/apps/blog-cms-pro-v1.5.2.zip',
+    8421376,
+    'f5ca38f748a1d6eaf726b8a42fb575c3c71f1864a8143301782de13da2d9202b',
+    '/uploads/thumbnails/blog-cms-thumbnail.jpg',
+    '["blog-screen1.jpg", "blog-screen2.jpg"]',
+    29.99,
+    'approved',
+    1,
+    2,
+    4,
+    '["cms", "blog", "php", "twig", "seo"]',
+    NOW()
+),
+(
+    'Project Manager Dashboard',
+    'project-manager-dashboard',
+    'Comprehensive project management tool designed for teams. Features task assignment, progress tracking, time logging, file sharing, team collaboration, and reporting.',
+    'Team project management with tasks, timelines, and collaboration',
+    '3.0.1',
+    '["PHP 8.2", "MySQL 8.0", "Vue.js 3", "Chart.js", "WebSocket"]',
+    'MySQL',
+    'https://demo.appmart.com/project-manager',
+    NULL,
+    'https://docs.appmart.com/project-manager',
+    '/uploads/apps/project-manager-v3.0.1.zip',
+    22558720,
+    '2cf24dba4f21d4288094e9b259d9a8c8f2d1e9f8d3e7c1a2b3c4d5e6f7g8h9i0',
+    '/uploads/thumbnails/project-manager-thumbnail.jpg',
+    '["pm-screen1.jpg", "pm-screen2.jpg", "pm-screen3.jpg"]',
+    79.99,
+    'approved',
+    0,
+    2,
+    3,
+    '["project-management", "team-collaboration", "gantt-chart", "kanban"]',
+    NOW()
+);
+
+-- Update application statistics
+UPDATE applications SET 
+    download_count = FLOOR(RAND() * 500) + 50,
+    rating_average = ROUND(3.5 + (RAND() * 1.5), 1),
+    rating_count = FLOOR(RAND() * 100) + 10
+WHERE status = 'approved';
