@@ -8,6 +8,7 @@
 namespace controllers;
 
 require_once __DIR__ . '/AuthController.php';
+require_once __DIR__ . '/../services/FileUploadService.php';
 
 class AppController {
     
@@ -328,22 +329,9 @@ class AppController {
             $errors[] = 'Price cannot be negative';
         }
         
-        // File upload validation
+        // Enhanced file upload validation using FileUploadService
         if (!isset($_FILES['app_file']) || $_FILES['app_file']['error'] !== UPLOAD_ERR_OK) {
             $errors[] = 'Application file is required';
-        } else {
-            $file = $_FILES['app_file'];
-            $allowedTypes = config('app.allowed_file_types');
-            $maxSize = config('app.max_upload_size');
-            
-            $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-            if (!in_array($fileExtension, $allowedTypes)) {
-                $errors[] = 'Invalid file type. Allowed: ' . implode(', ', $allowedTypes);
-            }
-            
-            if ($file['size'] > $maxSize) {
-                $errors[] = 'File size exceeds maximum limit of ' . ($maxSize / 1024 / 1024) . 'MB';
-            }
         }
         
         if (!empty($errors)) {
@@ -365,21 +353,16 @@ class AppController {
                 $slug .= '-' . time();
             }
             
-            // Handle file upload
-            $uploadDir = config('app.upload_path') . 'apps/';
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
+            // Use enhanced file upload service
+            $fileUploadService = new \FileUploadService();
+            $uploadResult = $fileUploadService->uploadFile($_FILES['app_file'], $user['id'], 'app');
+            
+            if (!$uploadResult['success']) {
+                throw new Exception($uploadResult['message']);
             }
             
-            $fileName = $slug . '-v' . $version . '.' . $fileExtension;
-            $filePath = $uploadDir . $fileName;
-            
-            if (!move_uploaded_file($file['tmp_name'], $filePath)) {
-                throw new Exception('Failed to upload file');
-            }
-            
-            // Calculate file hash
-            $fileHash = hash_file('sha256', $filePath);
+            // Calculate file hash for integrity
+            $fileHash = hash_file('sha256', $uploadResult['path']);
             
             // Insert application
             $insertStmt = $pdo->prepare("
@@ -404,8 +387,8 @@ class AppController {
                 $databaseType,
                 $demoUrl,
                 $githubUrl,
-                '/uploads/apps/' . $fileName,
-                $file['size'],
+                $uploadResult['path'],
+                $uploadResult['size'],
                 $fileHash,
                 $price,
                 'pending', // Requires admin approval
@@ -419,8 +402,8 @@ class AppController {
             
         } catch (Exception $e) {
             // Clean up uploaded file if database insert fails
-            if (isset($filePath) && file_exists($filePath)) {
-                unlink($filePath);
+            if (isset($uploadResult['path']) && file_exists($uploadResult['path'])) {
+                unlink($uploadResult['path']);
             }
             
             if (config('app.debug')) {

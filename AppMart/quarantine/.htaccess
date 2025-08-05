@@ -1,0 +1,21 @@
+# AppMart Quarantine Security Configuration
+# C:\xampp\htdocs\AppMart\quarantine\.htaccess  
+# Create at 2508051330 Ver1.00
+
+# Completely deny all access to quarantined files
+Order Deny,Allow
+Deny from all
+
+# Prevent directory browsing
+Options -Indexes
+
+# Block all file types
+<Files "*">
+    Order Deny,Allow
+    Deny from all
+</Files>
+
+# Security headers
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"
